@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSC 0316 — Modules 7 & 8 Reviewer</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap');
+
+/* ===== DARK MODE (default) ===== */
+:root {
+  --bg: #0d0f14;
+  --bg2: #13161e;
+  --card: #181b24;
+  --card2: #1e2230;
+  --border: #2a2f3e;
+  --border2: #353c52;
+  --accent: #4f8ef7;
+  --accent2: #7b5cf0;
+  --red: #e05252;
+  --green: #3ecf8e;
+  --yellow: #f5c842;
+  --text: #e8eaf2;
+  --muted: #8891aa;
+  --radius: 14px;
+  --radius-sm: 8px;
+  --header-bg: linear-gradient(135deg, #0f1a3a 0%, #1a0f3a 100%);
+  --tabs-bg: rgba(13,15,20,0.95);
+  --quiz-card-bg: rgba(13,15,20,0.98);
+  --tip-bg: rgba(245,200,66,0.07);
+  --tip-color: #e4c97e;
+  --highlight-bg: linear-gradient(135deg, rgba(79,142,247,0.08), rgba(123,92,240,0.08));
+  --highlight-border: rgba(79,142,247,0.2);
+  --highlight-strong: #4f8ef7;
+  --input-bg: #13161e;
+  --correct-bg: rgba(62,207,142,0.08);
+  --wrong-bg: rgba(224,82,82,0.08);
+}
+
+/* ===== LIGHT MODE ===== */
+body.light-mode {
+  --bg: #f0f2f8;
+  --bg2: #e8eaf2;
+  --card: #ffffff;
+  --card2: #f4f6fc;
+  --border: #d0d4e8;
+  --border2: #b8bdd6;
+  --accent: #2563eb;
+  --accent2: #6d28d9;
+  --red: #dc2626;
+  --green: #059669;
+  --yellow: #d97706;
+  --text: #1e2235;
+  --muted: #5a6080;
+  --header-bg: linear-gradient(135deg, #1e3a8a 0%, #3b1d8a 100%);
+  --tabs-bg: rgba(240,242,248,0.97);
+  --quiz-card-bg: rgba(255,255,255,0.98);
+  --tip-bg: rgba(217,119,6,0.08);
+  --tip-color: #92400e;
+  --highlight-bg: linear-gradient(135deg, rgba(37,99,235,0.07), rgba(109,40,217,0.07));
+  --highlight-border: rgba(37,99,235,0.25);
+  --highlight-strong: #1d4ed8;
+  --input-bg: #f0f2f8;
+  --correct-bg: rgba(5,150,105,0.08);
+  --wrong-bg: rgba(220,38,38,0.08);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+  transition: background 0.25s, color 0.25s;
+}
+
+/* Header */
+.site-header {
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border2);
+  padding: 2rem 1.5rem 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(12px);
+}
+
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.header-title h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 800;
+  background: linear-gradient(90deg, #60a5fa, #a78bfa, #34d399);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
+}
+
+.header-title p {
+  color: rgba(255,255,255,0.6);
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
+
+.header-badges {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.badge-blue { background: rgba(79,142,247,0.2); color: #93c5fd; border: 1px solid rgba(79,142,247,0.4); }
+.badge-purple { background: rgba(123,92,240,0.2); color: #c4b5fd; border: 1px solid rgba(123,92,240,0.4); }
+
+.theme-btn {
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 7px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.03em;
+}
+.theme-btn:hover {
+  background: rgba(255,255,255,0.22);
+  border-color: rgba(255,255,255,0.4);
+}
+
+/* Tabs */
+.tabs-wrap {
+  position: sticky;
+  top: 0;
+  z-index: 90;
+  background: var(--tabs-bg);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0.6rem 1.5rem;
+  transition: background 0.25s;
+}
+
+.tabs {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.tab {
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  color: var(--muted);
+  background: transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.tab:hover { color: var(--text); background: var(--card2); border-color: var(--border2); }
+
+.tab.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 0 16px rgba(79,142,247,0.25);
+}
+
+/* Main */
+.main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.section { display: none; animation: fadeUp 0.2s ease-out; }
+.section.active { display: block; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Cards */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.4rem 1.5rem;
+  margin-bottom: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.25s;
+}
+
+.card:hover { border-color: var(--border2); box-shadow: 0 4px 24px rgba(0,0,0,0.1); }
+
+.card-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.01em;
+  margin-bottom: 1rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.card-title .ct-icon {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+/* Term rows */
+.term-row {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 0.75rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+  align-items: start;
+}
+.term-row:last-child { border-bottom: none; }
+.term-key {
+  font-weight: 600;
+  color: var(--accent2);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+body.light-mode .term-key { color: #6d28d9; }
+.term-val { color: var(--muted); }
+
+/* Two col grid */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+
+/* Compare table */
+.compare {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+.compare th, .compare td {
+  padding: 0.65rem 0.85rem;
+  text-align: left;
+  border: 1px solid var(--border);
+}
+.compare th {
+  background: var(--card2);
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+  color: var(--text);
+}
+.compare tr:nth-child(even) td { background: rgba(0,0,0,0.02); }
+body.light-mode .compare tr:nth-child(even) td { background: rgba(0,0,0,0.025); }
+.compare td { color: var(--muted); }
+.compare .red-th { color: var(--red); }
+.compare .blue-th { color: var(--accent); }
+
+/* List items */
+.li-item {
+  display: flex;
+  gap: 0.6rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.88rem;
+  align-items: flex-start;
+}
+.li-item:last-child { border-bottom: none; }
+.li-item::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+  margin-top: 0.55rem;
+}
+.li-item strong { color: var(--text); }
+.li-val { color: var(--muted); }
+
+/* Tip box */
+.tip-box {
+  background: var(--tip-bg);
+  border-left: 3px solid var(--yellow);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 0.75rem 1rem;
+  font-size: 0.84rem;
+  color: var(--tip-color);
+  margin-top: 0.85rem;
+  transition: background 0.25s, color 0.25s;
+}
+
+/* Section label */
+.sec-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 1rem 0 0.4rem;
+}
+
+/* Mini badge inside content */
+.mbadge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 999px;
+  vertical-align: middle;
+  margin-right: 4px;
+  letter-spacing: 0.04em;
+}
+
+/* SIEM mapping table */
+.siem-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+.siem-table th, .siem-table td { padding: 0.55rem 0.85rem; border: 1px solid var(--border); }
+.siem-table th { background: var(--card2); font-weight: 700; color: var(--text); font-size: 0.8rem; }
+.siem-table td { color: var(--muted); }
+.siem-table tr:nth-child(even) td { background: rgba(0,0,0,0.02); }
+
+/* Acronym grid */
+.acro-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0.5rem; }
+.acro-item {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 0.9rem;
+  font-size: 0.86rem;
+  transition: background 0.25s;
+}
+.acro-item strong { color: var(--accent); }
+.acro-item span { color: var(--muted); }
+
+/* IR lifecycle */
+.lifecycle {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 0.75rem 0;
+}
+.lifecycle-step {
+  background: var(--card2);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  transition: background 0.25s;
+}
+.lifecycle-arrow { color: var(--muted); font-size: 0.75rem; }
+
+/* QUIZ */
+.quiz-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--card);
+  z-index: 5;
+  padding-top: 0.5rem;
+  transition: background 0.25s;
+}
+
+.q-stats { font-size: 0.82rem; color: var(--muted); }
+.q-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+.q-btn {
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border2);
+  background: var(--card2);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.q-btn:hover { border-color: var(--accent); color: var(--accent); }
+.q-btn.primary { background: var(--accent); color: #fff; border-color: transparent; }
+.q-btn.primary:hover { filter: brightness(1.1); }
+
+.q-score {
+  display: none;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border2);
+  background: var(--card2);
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  color: var(--text);
+  transition: background 0.25s;
+}
+.q-score.show { display: block; }
+.q-score-note { font-size: 0.78rem; font-weight: 400; color: var(--muted); margin-top: 0.3rem; }
+
+.quiz-list { display: grid; gap: 0.85rem; }
+
+.quiz-item {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+  transition: border-color 0.2s, background 0.25s;
+}
+.quiz-item.correct { border-color: var(--green); }
+.quiz-item.wrong { border-color: var(--red); }
+
+.q-question {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text);
+  margin-bottom: 0.75rem;
+  line-height: 1.55;
+}
+
+.q-choices { display: grid; gap: 0.4rem; }
+
+.q-choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--card);
+  cursor: pointer;
+  font-size: 0.84rem;
+  color: var(--muted);
+  transition: all 0.15s;
+}
+.q-choice:hover { border-color: var(--border2); color: var(--text); }
+.q-choice input[type="radio"] { accent-color: var(--accent); margin-top: 2px; flex-shrink: 0; }
+.q-choice.correct { border-color: var(--green); background: var(--correct-bg); color: var(--text); }
+.q-choice.wrong { border-color: var(--red); background: var(--wrong-bg); }
+
+.q-feedback {
+  margin-top: 0.75rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.55;
+}
+.q-feedback strong { color: var(--text); }
+
+/* Input quiz */
+.q-choice input[type="text"] {
+  width: 100%;
+  margin-top: 0;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  background: var(--input-bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.84rem;
+  transition: background 0.25s, color 0.25s, border-color 0.2s;
+}
+.q-choice input[type="text"]::placeholder { color: var(--muted); }
+.q-choice input[type="text"]:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* Card title sticky for quiz */
+.card .card-title.sticky-title {
+  position: sticky;
+  top: 0;
+  background: var(--card);
+  z-index: 10;
+  margin-top: -1.4rem;
+  padding-top: 1.4rem;
+  transition: background 0.25s;
+}
+
+/* Highlight box */
+.highlight-box {
+  background: var(--highlight-bg);
+  border: 1px solid var(--highlight-border);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1rem;
+  font-size: 0.87rem;
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+  transition: background 0.25s;
+}
+.highlight-box strong { color: var(--highlight-strong); }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .two-col, .three-col { grid-template-columns: 1fr; }
+  .term-row { grid-template-columns: 1fr; gap: 0.2rem; }
+  .term-key { color: var(--accent); }
+  .main { padding: 1rem; }
+  .site-header { padding: 1rem; }
+  .tabs-wrap { padding: 0.5rem 1rem; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-title">
+      <h1>CSC 0316 Reviewer</h1>
+      <p>Information Assurance & Security — Modules 7 &amp; 8</p>
+    </div>
+    <div class="header-badges">
+      <span class="badge badge-blue">Module 7: Security Ops</span>
+      <span class="badge badge-purple">Module 8: Assessment</span>
+      <button class="theme-btn" id="themeToggle">☀ Light Mode</button>
+    </div>
+  </div>
+</header>
+
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab active" onclick="show(event,'m7-malware')">Malware Types</button>
+    <button class="tab" onclick="show(event,'m7-threats')">Threats &amp; Attacks</button>
+    <button class="tab" onclick="show(event,'m7-secops')">Security Ops Team</button>
+    <button class="tab" onclick="show(event,'m8-design')">Designing Tests</button>
+    <button class="tab" onclick="show(event,'m8-vuln')">Vuln Assessment</button>
+    <button class="tab" onclick="show(event,'m8-pentest')">Pen Testing</button>
+    <button class="tab" onclick="show(event,'m8-other')">Other Tests &amp; Output</button>
+    <button class="tab" onclick="show(event,'acros')">Acronyms</button>
+    <button class="tab" onclick="show(event,'quiz')">MCQ Quiz</button>
+    <button class="tab" onclick="show(event,'scenarioQuiz')">Scenario Quiz</button>
+    <button class="tab" onclick="show(event,'enumQuiz')">Enumeration Quiz</button>
+  </div>
+</div>
+
+<main class="main">
+
+<!-- ===== MODULE 7: MALWARE ===== -->
+<div id="m7-malware" class="section active">
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon"></span>What is Malware?</div>
+    <div class="highlight-box"><strong>Malicious Software (Malware)</strong> — a wide range of different software with malicious intent. Includes many types targeting systems, data, and users.</div>
+    <div class="sec-label">Types of Malware</div>
+    <div class="two-col">
+      <div>
+        <div class="li-item"><span><strong>Buffer Overflow</strong> — programming error; writes beyond a fixed buffer into adjacent memory, allowing malicious code injection</span></div>
+        <div class="li-item"><span><strong>Viruses</strong> — set of malicious code that infects a host; executes when an application runs; replicates and delivers its payload upon a trigger</span></div>
+        <div class="li-item"><span><strong>Worms</strong> — travels the network autonomously without a host app or user interaction; consumes bandwidth; can slow networks to a crawl</span></div>
+        <div class="li-item"><span><strong>Trojan Horse</strong> — disguises itself as something desirable (e.g., free antivirus, screen saver) but installs malware when executed</span></div>
+        <div class="li-item"><span><strong>Logic Bomb</strong> — code embedded in an app that triggers on a specific event (date, program launch, or any programmer-defined condition)</span></div>
+        <div class="li-item"><span><strong>Spyware</strong> — installs without consent; silently collects keystrokes, screenshots, credentials, PII, and web form data</span></div>
+      </div>
+      <div>
+        <div class="li-item"><span><strong>Ransomware</strong> — encrypts victim files and demands payment (often crypto) to restore access</span></div>
+        <div class="li-item"><span><strong>Adware</strong> — shows unwanted ads or collects marketing data; typically hidden until pop-ups appear</span></div>
+        <div class="li-item"><span><strong>Rootkit</strong> — gains root/admin access via privilege escalation; modifies core system files to remain invisible and persist without detection</span></div>
+        <div class="li-item"><span><strong>Backdoor</strong> — creates an alternative entry point that bypasses security controls; hidden access for attacker</span></div>
+        <div class="li-item"><span><strong>Zero Day Attacks</strong> — exploits unknown software flaws with no patch; occurs on the day the weakness is discovered before a fix exists</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon"></span>Types of Viruses</div>
+    <div class="term-row"><span class="term-key">Boot Sector</span><span class="term-val">Infects the boot sector of the hard drive; executes before the OS loads</span></div>
+    <div class="term-row"><span class="term-key">Program</span><span class="term-val">Embedded directly into an executable program file</span></div>
+    <div class="term-row"><span class="term-key">Script</span><span class="term-val">Web-based scripting language virus; often delivered through websites</span></div>
+    <div class="term-row"><span class="term-key">Macro</span><span class="term-val">Exploits Microsoft Office macros; spreads via documents</span></div>
+    <div class="term-row"><span class="term-key">Polymorphic</span><span class="term-val">Mutating virus; changes its own code to evade antivirus detection</span></div>
+    <div class="tip-box">📧 Email is the most popular method used to spread viruses. A virus requires a host application and user execution — unlike a worm.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon"></span>Buffer Overflow</div>
+    <div class="term-row"><span class="term-key">Definition</span><span class="term-val">A programming error where a program writes more data to a fixed-length buffer than it can hold; overflow spills into adjacent memory locations</span></div>
+    <div class="term-row"><span class="term-key">Impact</span><span class="term-val">Adjacent memory can be exploited with malicious code to crash the app/system or inject malware</span></div>
+    <div class="term-row"><span class="term-key">Protections</span><span class="term-val">Data input validation, Windows run-time protections, secure development practices</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon"></span>Worm vs Virus — Key Difference</div>
+    <table class="compare">
+      <tr><th>Worm</th><th>Virus</th></tr>
+      <tr><td>No host application needed</td><td>Needs a host application</td></tr>
+      <tr><td>Does NOT require user execution</td><td>Typically requires user to run a program</td></tr>
+      <tr><td>Travels autonomously over the network</td><td>Spreads via infected files/email</td></tr>
+      <tr><td>Consumes network bandwidth</td><td>Executes its payload on trigger</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon"></span>Protecting Against Malware</div>
+    <div class="term-row"><span class="term-key">Antivirus Software</span><span class="term-val">Specifically designed to detect viruses, trojans, worms, rootkits, spyware, and adware</span></div>
+    <div class="term-row"><span class="term-key">Anti-spyware</span><span class="term-val">Emerged as a separate application specifically targeting spyware (separate from antivirus)</span></div>
+    <div class="term-row"><span class="term-key">Bug Bounty</span><span class="term-val">Programs offered by software developers; individuals receive recognition/compensation for reporting bugs and vulnerabilities (related to zero-day mitigation)</span></div>
+  </div>
+
+</div>
+
+<!-- ===== MODULE 7: THREATS & ATTACKS ===== -->
+<div id="m7-threats" class="section">
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon"></span>Social Engineering</div>
+    <div class="highlight-box"><strong>Social Engineering</strong> bypasses technology protections by using psychological tactics to encourage a person to perform a specific action or give up crucial information.</div>
+    <div class="sec-label">Mitigating Social Engineering</div>
+    <div class="li-item"><span>User Training &amp; Awareness</span></div>
+    <div class="li-item"><span>Be suspicious &amp; cautious of unsolicited requests</span></div>
+    <div class="li-item"><span>Verify someone's identity before sharing info</span></div>
+    <div class="li-item"><span>Don't rely on email alone as verification</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon"></span>Spam &amp; Spoofed Email</div>
+    <div class="term-row"><span class="term-key">Spam Email</span><span class="term-val">Unsolicited emails — commonly advertising but sometimes phishing/scamming attempts; can carry malware</span></div>
+    <div class="term-row"><span class="term-key">Email Spoofing</span><span class="term-val">Forging the email header so the message appears to come from a legitimate source; used in phishing, pharming, and spam campaigns</span></div>
+    <div class="term-row"><span class="term-key">Phishing</span><span class="term-val">Sending deceptive email to trick users into revealing personal information (e.g., bank credentials) or clicking malicious links</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon"></span>Common Attack Methods</div>
+    <div class="term-row"><span class="term-key">DoS Attack</span><span class="term-val">Malicious user floods a server with requests, overwhelming its resources so it can't respond to legitimate requests</span></div>
+    <div class="term-row"><span class="term-key">DDoS Attack</span><span class="term-val">DoS launched from a large number of malicious machines simultaneously; harder to block</span></div>
+    <div class="term-row"><span class="term-key">Backdoor Attack</span><span class="term-val">Creating an alternative way into a system that bypasses its security controls</span></div>
+    <div class="term-row"><span class="term-key">Replay Attack</span><span class="term-val">Attacker captures a message from a device to a server, then resends the original unmodified message to create a "trusted" relationship</span></div>
+    <div class="term-row"><span class="term-key">Weak Encryption</span><span class="term-val">Occurs when enough traffic is captured to break the key; e.g., WEP encryption is vulnerable</span></div>
+    <div class="term-row"><span class="term-key">Software Vuln Attack</span><span class="term-val">Exploitation of known software/application vulnerabilities for malicious purposes</span></div>
+    <div class="term-row"><span class="term-key">Remote Code Execution</span><span class="term-val">Used against improperly coded web apps; allows attackers to run system-level code remotely</span></div>
+    <div class="term-row"><span class="term-key">SQL Injection</span><span class="term-val">Malicious SQL inserted via web input forms; can retrieve, delete, or drop database tables</span></div>
+    <div class="term-row"><span class="term-key">XSS Attack</span><span class="term-val">Malicious HTML/JS injected into a website's code; executes when a victim visits the page; steals cookies, session data</span></div>
+    <div class="sec-label">Types of DoS/DDoS</div>
+    <div class="term-row"><span class="term-key">Buffer Overflows</span><span class="term-val">Sending the server more data than expected</span></div>
+    <div class="term-row"><span class="term-key">SYN Attack</span><span class="term-val">Exploits the TCP three-way handshake</span></div>
+    <div class="term-row"><span class="term-key">Ping of Death</span><span class="term-val">Exploits the ICMP "ping" protocol with oversized packets</span></div>
+  </div>
+
+</div>
+
+<!-- ===== MODULE 7: SECURITY OPS TEAM ===== -->
+<div id="m7-secops" class="section">
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon"></span>Monitoring &amp; Detection — SIEM</div>
+    <div class="highlight-box">The Security Operations Team uses <strong>SIEM (Security Information and Event Management)</strong> combined with logs from firewalls, servers, IPS, routers, switches, and workstations to detect attacks.</div>
+    <div class="sec-label">SIEM Attack Detection Mapping</div>
+    <table class="siem-table">
+      <tr><th>Attack</th><th>What SIEM Detects</th></tr>
+      <tr><td>Virus / Trojan</td><td>Unusual file/process activity</td></tr>
+      <tr><td>Worm</td><td>Rapid spread / unusual network traffic</td></tr>
+      <tr><td>DDoS</td><td>Traffic spike</td></tr>
+      <tr><td>Phishing</td><td>Suspicious login behavior</td></tr>
+      <tr><td>Backdoor</td><td>Unknown remote access</td></tr>
+      <tr><td>Spyware</td><td>Strange outbound connections</td></tr>
+      <tr><td>Replay Attack</td><td>Reused authentication patterns</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon"></span>Threat Detection — True vs False Positive</div>
+    <div class="term-row"><span class="term-key">True Positive</span><span class="term-val">Alert is triggered AND it is an actual real attack/threat</span></div>
+    <div class="term-row"><span class="term-key">False Positive</span><span class="term-val">Alert is triggered but it is NOT an actual threat — a benign event triggered the alarm</span></div>
+    <div class="sec-label">Basic Analyst Process</div>
+    <div class="lifecycle">
+      <div class="lifecycle-step">1. Receive Alert</div>
+      <div class="lifecycle-arrow">→</div>
+      <div class="lifecycle-step">2. Check Logs</div>
+      <div class="lifecycle-arrow">→</div>
+      <div class="lifecycle-step">3. Analyze Behavior</div>
+      <div class="lifecycle-arrow">→</div>
+      <div class="lifecycle-step">4. Validate Source</div>
+      <div class="lifecycle-arrow">→</div>
+      <div class="lifecycle-step">5. Decide: True / False Positive</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon"></span>Incident Response Lifecycle</div>
+    <div class="lifecycle">
+      <div class="lifecycle-step">Preparation</div>
+      <div class="lifecycle-arrow">→</div>
+      <div class="lifecycle-step">Detection / Analysis</div>
+      <div class="lifecycle-arrow">→</div>
+      <div class="lifecycle-step">Containment</div>
+      <div class="lifecycle-arrow">→</div>
+      <div class="lifecycle-step">Eradication</div>
+      <div class="lifecycle-arrow">→</div>
+      <div class="lifecycle-step">Recovery</div>
+      <div class="lifecycle-arrow">→</div>
+      <div class="lifecycle-step">Post-Incident</div>
+    </div>
+    <div class="term-row"><span class="term-key">Isolation</span><span class="term-val">Isolating the infected/compromised system from the rest of the network</span></div>
+    <div class="term-row"><span class="term-key">Containment</span><span class="term-val">Containing the spread of the incident across multiple systems</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon"></span>Vulnerability Management</div>
+    <table class="siem-table">
+      <tr><th>Attack / Vulnerability</th><th>Vulnerability Management Action</th></tr>
+      <tr><td>Buffer Overflow</td><td>Secure Coding + Patching</td></tr>
+      <tr><td>Remote Code Execution (RCE)</td><td>Fix Application Flaws</td></tr>
+      <tr><td>SQL Injection</td><td>Input Validation</td></tr>
+      <tr><td>Worm</td><td>Patch Vulnerabilities</td></tr>
+      <tr><td>Zero Day</td><td>Reduced exposure (System Hardening)</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon"></span>Threat Intelligence</div>
+    <table class="siem-table">
+      <tr><th>Attack</th><th>Threat Intelligence Use</th></tr>
+      <tr><td>Phishing</td><td>Identify fake domains</td></tr>
+      <tr><td>Ransomware</td><td>Detect variants</td></tr>
+      <tr><td>Worm</td><td>Known spreading behavior</td></tr>
+      <tr><td>Zero Day</td><td>Known C2 (Command & Control) Servers</td></tr>
+    </table>
+    <div class="sec-label">Why Threat Intelligence Matters</div>
+    <div class="li-item"><span>Proactive Defense — prevent attacks before they happen</span></div>
+    <div class="li-item"><span>Faster Detection — already-known patterns speed up analysis</span></div>
+    <div class="li-item"><span>Updated Security Rules — SIEM rules stay current with emerging threats</span></div>
+    <div class="li-item"><span>Awareness of New Threats — keeps team informed of evolving landscape</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon"></span>Access Control &amp; Identity Management</div>
+    <table class="siem-table">
+      <tr><th>Attack</th><th>How Access Control Helps</th></tr>
+      <tr><td>Replay Attack</td><td>Use tokens, MFA</td></tr>
+      <tr><td>Phishing</td><td>Limits damage if credentials are compromised</td></tr>
+      <tr><td>Backdoor</td><td>Detect unauthorized access attempts</td></tr>
+      <tr><td>Rootkit</td><td>Prevent privilege escalation</td></tr>
+      <tr><td>Insider Threat</td><td>Restrict access using least privilege</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon"></span>Endpoint &amp; Network Security</div>
+    <table class="siem-table">
+      <tr><th>Attack</th><th>Defense</th></tr>
+      <tr><td>Virus / Trojan</td><td>Antivirus / EDR (Endpoint Detection and Response)</td></tr>
+      <tr><td>Worm</td><td>Network Monitoring</td></tr>
+      <tr><td>DDoS</td><td>Firewall / Traffic Filtering</td></tr>
+      <tr><td>Spyware</td><td>Endpoint Detection</td></tr>
+      <tr><td>Backdoor</td><td>Network + Endpoint Monitoring</td></tr>
+    </table>
+  </div>
+
+</div>
+
+<!-- ===== MODULE 8: DESIGNING TESTS ===== -->
+<div id="m8-design" class="section">
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon"></span>Security Testing vs Assessment vs Audit</div>
+    <div class="term-row"><span class="term-key">Security Testing</span><span class="term-val">Verifies that security controls are functioning properly; should take place on a regular schedule; focused on specific controls</span></div>
+    <div class="term-row"><span class="term-key">Security Assessment</span><span class="term-val">Comprehensive review of security of systems; goes beyond testing; includes reviews of risk and the threat environment; assessment report is often a requirement</span></div>
+    <div class="term-row"><span class="term-key">Security Audit</span><span class="term-val">Very similar to assessments but performed by independent auditors; can be internal, external, or third-party</span></div>
+    <div class="tip-box">🔑 Key distinction: Testing = verify controls. Assessment = comprehensive + risk review. Audit = assessment done by independent auditors.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon"></span>Scheduling Security Tests — Factors to Consider</div>
+    <div class="two-col">
+      <div>
+        <div class="li-item"><span>Availability of testing resources</span></div>
+        <div class="li-item"><span>Criticality of the systems being protected</span></div>
+        <div class="li-item"><span>Sensitivity of data on systems</span></div>
+        <div class="li-item"><span>Likelihood of technical failure</span></div>
+        <div class="li-item"><span>Likelihood of a misconfiguration</span></div>
+      </div>
+      <div>
+        <div class="li-item"><span>Risk the system will come under attack</span></div>
+        <div class="li-item"><span>Rate of change of the control configuration</span></div>
+        <div class="li-item"><span>Other changes in the technical environment</span></div>
+        <div class="li-item"><span>Difficulty and time required to perform the test</span></div>
+        <div class="li-item"><span>Impact of test on normal business operations</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon"></span>NIST SP 800-53A — Assessment Framework</div>
+    <div class="highlight-box"><strong>NIST Special Publication 800-53A:</strong> "Assessing Security and Privacy Controls in Federal Information Systems and Organizations: Building Effective Assessment Plans"</div>
+    <div class="sec-label">4 Components of NIST Assessments</div>
+    <div class="term-row"><span class="term-key">Specifications</span><span class="term-val">The documents associated with the system being audited</span></div>
+    <div class="term-row"><span class="term-key">Mechanisms</span><span class="term-val">The controls used within an information system to meet the specifications</span></div>
+    <div class="term-row"><span class="term-key">Activities</span><span class="term-val">The actions carried out by people within the information system</span></div>
+    <div class="term-row"><span class="term-key">Individuals</span><span class="term-val">The people who implement specifications, mechanisms, and activities</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon"></span>Types of Security Audits</div>
+    <div class="term-row"><span class="term-key">Internal Audit</span><span class="term-val">Performed by internal staff and typically for internal audiences; the reporting line is independent of the functions being evaluated</span></div>
+    <div class="term-row"><span class="term-key">External Audit</span><span class="term-val">Performed by an outside auditing firm</span></div>
+    <div class="term-row"><span class="term-key">Third-Party Audit</span><span class="term-val">Conducted by another organization; e.g., a regulatory body auditing a firm under their regulation</span></div>
+    <div class="sec-label">Audit Locations</div>
+    <div class="term-row"><span class="term-key">On-Premises</span><span class="term-val">Audit performed physically at the site</span></div>
+    <div class="term-row"><span class="term-key">Cloud</span><span class="term-val">Audit performed on cloud-hosted systems</span></div>
+    <div class="term-row"><span class="term-key">Hybrid</span><span class="term-val">Mix of on-premises and cloud audit</span></div>
+    <div class="tip-box">📋 COBIT (Control Objectives for Information and Related Technologies) is the most commonly used auditing standard framework.</div>
+  </div>
+
+</div>
+
+<!-- ===== MODULE 8: VULNERABILITY ASSESSMENT ===== -->
+<div id="m8-vuln" class="section">
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon"></span>Vulnerability Assessment</div>
+    <div class="term-row"><span class="term-key">Purpose</span><span class="term-val">Discover system weaknesses; tests are commonly automated and help build a remediation roadmap for discovered vulnerabilities</span></div>
+    <div class="term-row"><span class="term-key">SCAP</span><span class="term-val">Security Content Automation Protocol — created by NIST; provides standards around the area of vulnerabilities</span></div>
+    <div class="term-row"><span class="term-key">CVE</span><span class="term-val">Common Vulnerabilities and Exposures — standardized identifiers for publicly known vulnerabilities</span></div>
+    <div class="term-row"><span class="term-key">CVSS</span><span class="term-val">Common Vulnerability Scoring System — scores and ranks the severity of vulnerabilities</span></div>
+    <div class="sec-label">Types of Vulnerability Scans</div>
+    <div class="li-item"><span><strong>Network Discovery Scans</strong> — identify devices and open ports on the network</span></div>
+    <div class="li-item"><span><strong>Network Vulnerability Scans</strong> — detect security weaknesses in network infrastructure</span></div>
+    <div class="li-item"><span><strong>Web App Vulnerability Scans</strong> — identify flaws in web applications (e.g., XSS, SQLi)</span></div>
+    <div class="li-item"><span><strong>Database Vulnerability Scans</strong> — find weaknesses in database configurations and access</span></div>
+    <div class="tip-box">🎯 The main output of a vulnerability assessment = a <strong>Remediation Roadmap</strong> provided to stakeholders.</div>
+  </div>
+
+</div>
+
+<!-- ===== MODULE 8: PEN TESTING ===== -->
+<div id="m8-pentest" class="section">
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon"></span>Penetration Testing Types</div>
+    <table class="compare">
+      <tr><th>Type</th><th>Knowledge Level</th><th>Simulates</th></tr>
+      <tr><td><strong>Black Box</strong></td><td>Zero knowledge of the system</td><td>External attacker with no prior info</td></tr>
+      <tr><td><strong>White Box</strong></td><td>Full knowledge — source code, architecture, credentials</td><td>Internal review; most thorough</td></tr>
+      <tr><td><strong>Gray Box</strong></td><td>Partial knowledge — some architecture, no source code</td><td>Insider or partially informed attacker</td></tr>
+    </table>
+    <div class="tip-box">💡 Memory trick: Black = no light = zero info. White = full light = full info. Gray = somewhere in between.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon"></span>Red Team vs Blue Team vs Purple Team</div>
+    <table class="compare">
+      <tr>
+        <th class="red-th">🔴 Red Team (Offensive)</th>
+        <th class="blue-th">🔵 Blue Team (Defensive)</th>
+      </tr>
+      <tr>
+        <td>
+          <strong>Positions:</strong><br>
+          • Ethical Hacker / Pentester<br>
+          • Exploit Developer<br>
+          • Bug Bounty Hunter<br>
+          • Physical Security Pentester<br><br>
+          <strong>Tools:</strong><br>
+          Nmap, Metasploit, Kali Linux
+        </td>
+        <td>
+          <strong>Positions:</strong><br>
+          • SOC Analyst (Level 1–3)<br>
+          • Incident Response (IR Analyst)<br>
+          • Threat Hunter<br>
+          • Digital Forensic Analyst<br>
+          • Threat Intelligence Analyst<br>
+          • Vulnerability Management Analyst<br><br>
+          <strong>Tools:</strong><br>
+          SIEM (QRadar, Splunk, AlertLogic, Sentinel), Qualys, OpenVAS, Maltego, IPS/IDS, EDR, Firewall Rules
+        </td>
+      </tr>
+    </table>
+    <div class="term-row" style="margin-top:0.75rem;"><span class="term-key">Purple Team</span><span class="term-val">Collaboration between Red and Blue teams to enhance the effectiveness of both attack and defense assessments; shares findings and strategies</span></div>
+  </div>
+
+</div>
+
+<!-- ===== MODULE 8: OTHER TESTS & OUTPUT ===== -->
+<div id="m8-other" class="section">
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon"></span>Other Common Tests</div>
+    <div class="term-row"><span class="term-key">Log Reviews</span><span class="term-val">Important for assessing security infrastructure; SIEMs are used; NTP (or similar) syncs time across devices for accurate log correlation</span></div>
+    <div class="term-row"><span class="term-key">Synthetic Transactions</span><span class="term-val">Simulating network traffic (often via scripts) to test system behavior and performance</span></div>
+    <div class="term-row"><span class="term-key">Code Review</span><span class="term-val">Software testing as part of the development process — identifies vulnerabilities in the source code before deployment</span></div>
+    <div class="term-row"><span class="term-key">Misuse Case Testing</span><span class="term-val">Testing how a system behaves when intentionally misused or given invalid inputs</span></div>
+    <div class="term-row"><span class="term-key">Coverage Analysis</span><span class="term-val">Ensures testing covers all intended areas of the system; identifies untested portions</span></div>
+    <div class="term-row"><span class="term-key">Breach &amp; Attack Simulations</span><span class="term-val">Simulated attacks to test defensive controls — tests defenses before real attackers do</span></div>
+    <div class="term-row"><span class="term-key">Compliance Checks</span><span class="term-val">Verifying adherence to regulatory standards and internal policies</span></div>
+    <div class="term-row"><span class="term-key">Interface Testing</span><span class="term-val">Testing APIs, UIs, and integration points for security weaknesses</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon"></span>Collecting Security Process Data</div>
+    <div class="term-row"><span class="term-key">Account Management</span><span class="term-val">Collect data on account management to ensure correct authorization levels; guards against privilege creep</span></div>
+    <div class="sec-label">Key Performance &amp; Risk Indicators (KPIs / KRIs)</div>
+    <div class="li-item"><span><strong>Number of Open Vulnerabilities</strong> — how many unpatched or unresolved vulnerabilities exist</span></div>
+    <div class="li-item"><span><strong>Time to Resolve</strong> — how quickly identified issues are remediated</span></div>
+    <div class="li-item"><span><strong>Rate of Occurrence</strong> — how frequently the same type of security event occurs</span></div>
+    <div class="li-item"><span><strong>Number of Compromises</strong> — how many accounts/systems were actually compromised</span></div>
+    <div class="li-item"><span><strong>Number of Software Flaws</strong> — code defects found during security testing</span></div>
+    <div class="li-item"><span><strong>Audit Findings</strong> — documented issues uncovered during an audit review</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon"></span>Analyzing Test Output — Report Components</div>
+    <div class="highlight-box">The primary goal of test data analysis = produce a <strong>Remediation Roadmap</strong> for various stakeholders.</div>
+    <div class="li-item"><span><strong>Executive Summary</strong> — high-level overview for leadership and non-technical stakeholders</span></div>
+    <div class="li-item"><span><strong>Scope and Objectives</strong> — what was tested and why</span></div>
+    <div class="li-item"><span><strong>Methodology</strong> — how the testing was conducted</span></div>
+    <div class="li-item"><span><strong>Findings</strong> — discovered vulnerabilities and security issues</span></div>
+    <div class="li-item"><span><strong>Risk Analysis</strong> — impact and likelihood assessment of findings</span></div>
+    <div class="li-item"><span><strong>Recommendations</strong> — specific steps to fix identified issues</span></div>
+    <div class="li-item"><span><strong>Timelines and Resources</strong> — remediation schedule and resource requirements</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="ct-icon"></span>Exception Handling &amp; Ethical Disclosure</div>
+    <div class="term-row"><span class="term-key">Exception</span><span class="term-val">When a policy, procedure, or control is temporarily bypassed; must be done for legitimate reasons; always documented; exceptions always carry increased risk</span></div>
+    <div class="term-row"><span class="term-key">Ethical Disclosure</span><span class="term-val">Some incidents must be ethically disclosed; many organizations lack a disclosure policy; DHS created a Vulnerability Disclosure Policy template to help</span></div>
+    <div class="tip-box">⚠️ Exceptions = temporary bypass = increased risk. Documentation is always key.</div>
+  </div>
+
+</div>
+
+<!-- ===== ACRONYMS ===== -->
+<div id="acros" class="section">
+  <div class="card">
+    <div class="card-title"><span class="ct-icon"></span>Module 7 — Security Operations Acronyms</div>
+    <div class="acro-grid">
+      <div class="acro-item"><strong>SIEM</strong> — <span>Security Information and Event Management</span></div>
+      <div class="acro-item"><strong>EDR</strong> — <span>Endpoint Detection and Response</span></div>
+      <div class="acro-item"><strong>IPS</strong> — <span>Intrusion Prevention System</span></div>
+      <div class="acro-item"><strong>IDS</strong> — <span>Intrusion Detection System</span></div>
+      <div class="acro-item"><strong>DoS</strong> — <span>Denial of Service</span></div>
+      <div class="acro-item"><strong>DDoS</strong> — <span>Distributed Denial of Service</span></div>
+      <div class="acro-item"><strong>XSS</strong> — <span>Cross-Site Scripting</span></div>
+      <div class="acro-item"><strong>SQL</strong> — <span>Structured Query Language (injection attack)</span></div>
+      <div class="acro-item"><strong>RCE</strong> — <span>Remote Code Execution</span></div>
+      <div class="acro-item"><strong>PII</strong> — <span>Personally Identifiable Information</span></div>
+      <div class="acro-item"><strong>SOC</strong> — <span>Security Operations Center</span></div>
+      <div class="acro-item"><strong>IR</strong> — <span>Incident Response</span></div>
+      <div class="acro-item"><strong>MFA</strong> — <span>Multi-Factor Authentication</span></div>
+      <div class="acro-item"><strong>WEP</strong> — <span>Wired Equivalent Privacy (weak encryption example)</span></div>
+      <div class="acro-item"><strong>C2</strong> — <span>Command and Control (servers)</span></div>
+      <div class="acro-item"><strong>ICMP</strong> — <span>Internet Control Message Protocol</span></div>
+      <div class="acro-item"><strong>TCP</strong> — <span>Transmission Control Protocol</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="ct-icon"></span>Module 8 — Security Assessment Acronyms</div>
+    <div class="acro-grid">
+      <div class="acro-item"><strong>SCAP</strong> — <span>Security Content Automation Protocol</span></div>
+      <div class="acro-item"><strong>CVE</strong> — <span>Common Vulnerabilities and Exposures</span></div>
+      <div class="acro-item"><strong>CVSS</strong> — <span>Common Vulnerability Scoring System</span></div>
+      <div class="acro-item"><strong>NIST</strong> — <span>National Institute of Standards and Technology</span></div>
+      <div class="acro-item"><strong>NIST SP 800-53A</strong> — <span>Assessing Security and Privacy Controls in Federal Info Systems</span></div>
+      <div class="acro-item"><strong>COBIT</strong> — <span>Control Objectives for Information and Related Technologies</span></div>
+      <div class="acro-item"><strong>NTP</strong> — <span>Network Time Protocol</span></div>
+      <div class="acro-item"><strong>DHS</strong> — <span>Department of Homeland Security</span></div>
+      <div class="acro-item"><strong>VA</strong> — <span>Vulnerability Assessment</span></div>
+      <div class="acro-item"><strong>KPI</strong> — <span>Key Performance Indicator</span></div>
+      <div class="acro-item"><strong>KRI</strong> — <span>Key Risk Indicator</span></div>
+      <div class="acro-item"><strong>DF</strong> — <span>Digital Forensics</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MCQ QUIZ ===== -->
+<div id="quiz" class="section">
+  <div class="card">
+    <div class="card-title sticky-title"><span class="ct-icon"></span>MCQ Quiz — Modules 7 &amp; 8</div>
+    <div class="quiz-meta">
+      <div class="q-stats" id="quizStats">100 multiple-choice items. Answer first, then check your score.</div>
+      <div class="q-actions">
+        <button class="q-btn primary" id="checkQuizBtn">Check Answers</button>
+        <button class="q-btn" id="shuffleQuizBtn">Shuffle</button>
+      </div>
+    </div>
+    <div class="q-score" id="quizScore"></div>
+    <div class="quiz-list" id="quizList"></div>
+  </div>
+</div>
+
+<!-- ===== SCENARIO QUIZ ===== -->
+<div id="scenarioQuiz" class="section">
+  <div class="card">
+    <div class="card-title sticky-title"><span class="ct-icon"></span>Scenario Quiz — Apply the Concepts</div>
+    <div class="quiz-meta">
+      <div class="q-stats" id="scenarioStats">50 scenario-based items. Choose the best answer.</div>
+      <div class="q-actions">
+        <button class="q-btn primary" id="checkScenarioBtn">Check Answers</button>
+        <button class="q-btn" id="shuffleScenarioBtn">Shuffle</button>
+      </div>
+    </div>
+    <div class="q-score" id="scenarioScore"></div>
+    <div class="quiz-list" id="scenarioList"></div>
+  </div>
+</div>
+
+<!-- ===== ENUM QUIZ ===== -->
+<div id="enumQuiz" class="section">
+  <div class="card">
+    <div class="card-title sticky-title"><span class="ct-icon"></span>Enumeration Quiz — List the Items</div>
+    <div class="quiz-meta">
+      <div class="q-stats" id="enumStats">50 enumeration items. Separate answers with commas. Order doesn't matter.</div>
+      <div class="q-actions">
+        <button class="q-btn primary" id="checkEnumBtn">Check Answers</button>
+        <button class="q-btn" id="shuffleEnumBtn">Shuffle</button>
+      </div>
+    </div>
+    <div class="q-score" id="enumScore"></div>
+    <div class="quiz-list" id="enumList"></div>
+  </div>
+</div>
+
+</main>
+
+<script>
+// ---- TAB SWITCHING ----
+function show(evt, id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  evt.currentTarget.classList.add('active');
+}
+
+// ---- THEME TOGGLE ----
+(function() {
+  const btn = document.getElementById('themeToggle');
+  const saved = localStorage.getItem('ias-theme');
+  if (saved === 'light') {
+    document.body.classList.add('light-mode');
+    btn.textContent = '🌙 Dark Mode';
+  }
+  btn.addEventListener('click', function() {
+    const isLight = document.body.classList.toggle('light-mode');
+    btn.textContent = isLight ? '🌙 Dark Mode' : '☀ Light Mode';
+    localStorage.setItem('ias-theme', isLight ? 'light' : 'dark');
+  });
+})();
+
+// ---- QUIZ DATA ----
+const quizData = [
+  {q:"What is malware?",c:["Legitimate software with hidden features","A wide range of software with malicious intent","A type of network protocol","A hardware vulnerability"],a:1},
+  {q:"Which malware travels the network WITHOUT requiring a host application or user interaction?",c:["Virus","Trojan Horse","Worm","Spyware"],a:2},
+  {q:"A buffer overflow occurs when:",c:["A firewall is misconfigured","A program writes more data to a buffer than it can hold","A user downloads a trojan","The OS restarts unexpectedly"],a:1},
+  {q:"What is a polymorphic virus?",c:["A virus that only affects polymers","A mutating virus that changes its own code to evade detection","A virus that replicates only on boot sector","A virus spread only via email"],a:1},
+  {q:"A Trojan Horse differs from a virus because it:",c:["Replicates automatically","Disguises itself as something desirable to trick users","Attacks only databases","Requires no user interaction"],a:1},
+  {q:"A logic bomb triggers on:",c:["Any random event","A specific event like a date, program launch, or programmer-defined condition","User antivirus scan","Network ping"],a:1},
+  {q:"Spyware collects which of the following? (Best answer)",c:["Only credit card numbers","Keystrokes, screenshots, credentials, PII, and web form data","Only browser history","Only authentication tokens"],a:1},
+  {q:"Adware is primarily designed to:",c:["Encrypt your files","Show advertisements or collect marketing data without your knowledge","Delete system files","Open backdoors"],a:1},
+  {q:"Ransomware typically demands payment in:",c:["Cash only","Credit card","Cryptocurrency","Gift cards only"],a:2},
+  {q:"A rootkit is designed to:",c:["Detect intrusions","Gain root/admin access and remain invisible to the OS","Monitor network traffic","Encrypt emails"],a:1},
+  {q:"A backdoor attack creates:",c:["A stronger authentication system","An alternative entry point that bypasses security controls","An encrypted tunnel","A firewall rule"],a:1},
+  {q:"Zero-day attacks exploit:",c:["Known vulnerabilities with patches","Unknown software flaws with no patch or fix","Old legacy systems only","Outdated antivirus databases"],a:1},
+  {q:"The most popular method used to spread viruses is:",c:["USB drives","Bluetooth","Email","FTP"],a:2},
+  {q:"Buffer overflow protections include:",c:["Data input validation, Windows run-time protections, secure development practices","Only antivirus software","Firewall rules only","Network segmentation only"],a:0},
+  {q:"Boot sector viruses infect:",c:["Only Microsoft Office documents","The boot sector of the hard drive","Web browser scripts","Network packets"],a:1},
+  {q:"Which virus type targets Microsoft Office macros?",c:["Boot Sector Virus","Script Virus","Macro Virus","Polymorphic Virus"],a:2},
+  {q:"Social engineering bypasses:",c:["Only firewalls","Technology protections by manipulating human behavior","Only physical security","Only network controls"],a:1},
+  {q:"Which is NOT a mitigation for social engineering?",c:["User training and awareness","Installing antivirus only","Verifying someone's identity","Being suspicious of unsolicited requests"],a:1},
+  {q:"Spam email can:",c:["Only advertise products","Carry malware and phishing/scamming attempts in addition to advertising","Only be blocked by users","Never reach the inbox"],a:1},
+  {q:"Email spoofing forges:",c:["The email body","The email attachment","The email header to make it appear from a legitimate source","The email timestamp"],a:2},
+  {q:"Phishing tricks users into:",c:["Installing antivirus","Revealing personal information or clicking malicious links","Updating their software","Changing their passwords voluntarily"],a:1},
+  {q:"A DoS attack makes a server unavailable by:",c:["Deleting its files","Flooding it with requests to overwhelm its resources","Encrypting its data","Installing malware quietly"],a:1},
+  {q:"How does a DDoS differ from a DoS?",c:["DDoS uses only one machine","DDoS is launched from many malicious machines simultaneously","DDoS uses encrypted traffic only","DDoS targets only web applications"],a:1},
+  {q:"A SYN attack exploits:",c:["The ICMP ping protocol","The TCP three-way handshake","The UDP broadcasting","The FTP authentication"],a:1},
+  {q:"Ping of Death exploits:",c:["The TCP handshake","The ICMP ping protocol with oversized packets","The ARP protocol","SQL queries"],a:1},
+  {q:"A replay attack involves:",c:["Replaying video footage to gather intelligence","Capturing a message and resending it later to create a trusted relationship","Replaying malware from a backup","Recording a user's screen"],a:1},
+  {q:"SQL injection manipulates:",c:["Network routing tables","Web-based input forms to pass unauthorized SQL to the database","Operating system kernel calls","Email headers"],a:1},
+  {q:"XSS attacks embed malicious code into:",c:["Email attachments","A website's code that executes when a victim visits the site","Database records only","System log files"],a:1},
+  {q:"Remote Code Execution attacks are commonly used against:",c:["Physical hardware","Improperly coded web applications","Only Linux systems","Email servers only"],a:1},
+  {q:"SIEM stands for:",c:["Security Intelligence and Event Management","Security Information and Event Management","System Integrity and Error Monitoring","Secure Internet and Email Monitoring"],a:1},
+  {q:"In SIEM detection, a worm is identified by:",c:["Unusual login behavior","Rapid spread and unusual network traffic","Encrypted outbound connections","Browser pop-up activity"],a:1},
+  {q:"A True Positive in threat detection means:",c:["An alert fired but it was harmless","An alert fired and it IS a real threat","No alert fired but a threat existed","No alert fired and no threat existed"],a:1},
+  {q:"A False Positive means:",c:["An alert fired and it is a real threat","An alert fired but it is NOT an actual threat","No alert fired and a breach occurred","A test that was correctly validated"],a:1},
+  {q:"The correct order of the Incident Response Lifecycle is:",c:["Detection, Preparation, Containment, Eradication, Recovery, Post-Incident","Preparation, Detection/Analysis, Containment, Eradication, Recovery, Post-Incident","Containment, Preparation, Detection, Recovery, Eradication, Post-Incident","Recovery, Detection, Eradication, Containment, Preparation, Post-Incident"],a:1},
+  {q:"Isolation in incident response means:",c:["Shutting down the entire network","Separating the infected system from the rest of the network","Deleting all logs","Paying the ransom immediately"],a:1},
+  {q:"Threat intelligence helps with proactive defense by:",c:["Automatically patching systems","Providing known attack patterns before attacks occur","Replacing SIEM systems","Blocking all outbound traffic"],a:1},
+  {q:"For DDoS defense, the Security Operations Team uses:",c:["Only antivirus software","Firewall / Traffic filtering","SQL injection mitigation","EDR only"],a:1},
+  {q:"EDR stands for:",c:["Endpoint Detection and Response","Enterprise Data Recovery","Encrypted Data Relay","Event Detection and Reporting"],a:0},
+  {q:"Security testing primarily:",c:["Replaces security audits","Verifies that security controls are functioning properly on a regular schedule","Creates new security policies","Automatically patches vulnerabilities"],a:1},
+  {q:"A security assessment differs from security testing because it:",c:["Is less comprehensive","Goes beyond testing to include risk and threat environment reviews","Only checks for malware","Is performed only by external auditors"],a:1},
+  {q:"Security audits are performed by:",c:["Only internal IT staff","Only the red team","Independent auditors","Only government agencies"],a:2},
+  {q:"Which NIST publication covers security assessment best practices?",c:["NIST SP 800-53","NIST SP 800-53A","NIST SP 800-171","NIST SP 800-37"],a:1},
+  {q:"NIST assessment 'Mechanisms' are:",c:["Documents associated with the system","Controls used within an information system to meet specifications","Actions carried out by people","People implementing the controls"],a:1},
+  {q:"NIST assessment 'Individuals' are:",c:["Only external auditors","Software controls","People who implement specifications, mechanisms, and activities","Documents associated with the audit"],a:2},
+  {q:"COBIT is used as an:",c:["Encryption algorithm","Auditing standard for information technology","Password policy template","Network monitoring tool"],a:1},
+  {q:"A third-party audit is initiated by:",c:["The system owner","Internal IT staff","Another organization such as a regulatory body","Only the CEO"],a:2},
+  {q:"SCAP was created by:",c:["ISO","NIST","DHS","ISACA"],a:1},
+  {q:"CVE provides:",c:["Severity scores for vulnerabilities","Standardized identifiers for publicly known vulnerabilities","Network scanning capabilities","Patch management tools"],a:1},
+  {q:"CVSS provides:",c:["Standard vulnerability identifiers","Severity scoring for vulnerabilities","Penetration testing methodology","Audit standards"],a:1},
+  {q:"Vulnerability assessments are commonly:",c:["Manual only","Automated and help build a remediation roadmap","Performed only during incident response","One-time events"],a:1},
+  {q:"Which scan type identifies devices and open ports on the network?",c:["Web App Vulnerability Scan","Database Vulnerability Scan","Network Discovery Scan","Network Vulnerability Scan"],a:2},
+  {q:"Black box penetration testing means:",c:["Full knowledge of the system","Partial knowledge of the system","Zero knowledge — simulates an external attacker","Physical access only"],a:2},
+  {q:"White box penetration testing is:",c:["The least thorough","Conducted with full knowledge including source code and architecture","Conducted with zero knowledge","Limited to network scans"],a:1},
+  {q:"Gray box penetration testing simulates:",c:["An external attacker with no knowledge","An insider or partially informed attacker","A full internal audit","A physical security breach"],a:1},
+  {q:"The Red Team is responsible for:",c:["Defensive operations","Collaborative improvement","Offensive operations — ethical hacking and pentesting","Audit compliance"],a:2},
+  {q:"Which role belongs on the Blue Team?",c:["Ethical Hacker","Exploit Developer","Bug Bounty Hunter","SOC Analyst"],a:3},
+  {q:"Digital Forensic Analyst is a position on the:",c:["Red Team","Purple Team","Blue Team","Audit Team"],a:2},
+  {q:"Maltego is used for:",c:["Network penetration testing","Digital Forensics (DF) by the Blue Team","SIEM log analysis","Vulnerability scoring"],a:1},
+  {q:"NTP in security testing is important for:",c:["Encrypting log files","Synchronizing time across devices for accurate log correlation","Scanning for vulnerabilities","Patching operating systems"],a:1},
+  {q:"Synthetic transactions refer to:",c:["Fake financial transactions for testing","Simulating network traffic often through scripts to test system behavior","SQL injection tests","Code review processes"],a:1},
+  {q:"Coverage analysis ensures:",c:["Only critical systems are tested","All intended areas of the system are covered by testing","Compliance with regulations only","No vulnerabilities exist"],a:1},
+  {q:"Misuse case testing tests:",c:["Normal system behavior","How a system behaves when intentionally misused or given bad inputs","Only authentication systems","Only network infrastructure"],a:1},
+  {q:"Interface testing covers:",c:["Only physical network interfaces","APIs, UIs, and integration points","Only database interfaces","Only web browsers"],a:1},
+  {q:"Compliance checks verify:",c:["Password strength only","Adherence to regulatory standards and internal policies","Physical access controls only","Firewall configurations only"],a:1},
+  {q:"Account management data collection guards against:",c:["Physical intrusion","Privilege creep — users accumulating excessive access over time","Network congestion","Hardware failure"],a:1},
+  {q:"Number of Open Vulnerabilities is a:",c:["Firewall rule","Key Performance / Risk Indicator (KPI/KRI)","Encryption algorithm","Network protocol"],a:1},
+  {q:"Time to Resolve measures:",c:["How long a system was offline","How quickly identified security issues are remediated","How many users are affected","How many alerts fired"],a:1},
+  {q:"Audit Findings are listed under:",c:["Network protocols","KPIs / KRIs","Physical access logs","CVSS scores"],a:1},
+  {q:"The primary goal of test data analysis is:",c:["To delete discovered vulnerabilities","To produce a Remediation Roadmap","To patch all systems immediately","To hire more security staff"],a:1},
+  {q:"An exception in security means:",c:["A permanent security rule","A temporary bypass of a policy, procedure, or control — always increases risk","A new audit finding","A network configuration change"],a:1},
+  {q:"Ethical disclosure refers to:",c:["Disclosing employee salaries","Responsibly disclosing security incidents that should be shared publicly","Hiding breaches from regulators","Disclosing source code publicly"],a:1},
+  {q:"Which organization created the Vulnerability Disclosure Policy template?",c:["NIST","COBIT","DHS (Department of Homeland Security)","ISO"],a:2},
+  {q:"A security report's Executive Summary is for:",c:["Technical staff only","Leadership and non-technical stakeholders — high-level overview","Only the penetration tester","Database administrators"],a:1},
+  {q:"The Methodology section of a report describes:",c:["The cost of testing","How the testing was conducted","Who was tested","The company's history"],a:1},
+  {q:"Risk Analysis in a security report covers:",c:["Employee performance","Impact and likelihood assessment of discovered findings","Network topology","Software licensing"],a:1},
+  {q:"Which protection defends against SQL injection?",c:["Firewall rules only","Input validation","Antivirus software","VPN tunneling"],a:1},
+  {q:"A Vulnerability Management Analyst is part of the:",c:["Red Team","Purple Team","Blue Team","Compliance Team"],a:2},
+  {q:"Threat Hunter is a role on the:",c:["Red Team","Blue Team","Purple Team","Audit Team"],a:1},
+  {q:"Bug Bounty Hunters are associated with which team?",c:["Blue Team","Purple Team","Red Team","Audit Team"],a:2},
+  {q:"Physical Security Pentester is part of the:",c:["Blue Team","Red Team","Purple Team","Compliance Team"],a:1},
+  {q:"Qualys and OpenVAS are tools used by:",c:["Red Team for penetration testing","Blue Team for vulnerability assessment scanning","Purple Team only","External auditors only"],a:1},
+  {q:"Nmap and Metasploit are tools used by:",c:["Blue Team","Audit Team","Purple Team","Red Team"],a:3},
+  {q:"Incident Response Analyst is on the:",c:["Red Team","Blue Team","Purple Team","Compliance Team"],a:1},
+  {q:"The Exploit Developer role belongs to the:",c:["Blue Team","Purple Team","Red Team","SOC"],a:2},
+  {q:"Which attack does Weak Encryption Key vulnerability enable?",c:["SQL injection","XSS attacks","Breaking network encryption by capturing enough traffic (e.g., WEP)","Buffer overflow only"],a:2},
+  {q:"An internal audit is performed by:",c:["External auditing firms","Internal staff for internal audiences; reporting line independent of evaluated functions","Regulatory bodies","Red team members"],a:1},
+  {q:"Rootkits are used for (real-world examples):",c:["Displaying advertisements","Governmental spying, corporate espionage, stealing customer data","Sending spam email","Performing SQL injection"],a:1},
+  {q:"A Worm's main negative impact on a network is:",c:["Deleting files","Consuming network bandwidth — slowing performance to a crawl","Displaying pop-up ads","Encrypting databases"],a:1},
+  {q:"Spyware runs:",c:["Visibly with user consent","Quietly in the background without user awareness or consent","Only during system startup","Only when a specific app runs"],a:1},
+  {q:"Which type of audit location covers cloud environments?",c:["On-premises","Hybrid","Cloud","Third-party"],a:2},
+  {q:"A hybrid audit involves:",c:["Only cloud systems","Only on-premises systems","A mix of on-premises and cloud audit","Third-party auditors only"],a:2},
+  {q:"Purple Team is best described as:",c:["Offensive only","Defensive only","Collaboration between Red and Blue teams to improve both attack and defense","An external audit team"],a:2},
+  {q:"NIST Specifications are:",c:["Controls used in the system","Documents associated with the system being audited","Actions carried out by people","People implementing the controls"],a:1},
+  {q:"NIST Activities are:",c:["Hardware controls","Documents associated with the audit","Actions carried out by people within the information system","Software controls"],a:2},
+  {q:"Log reviews require NTP primarily to:",c:["Encrypt log files","Sync time across devices so logs can be accurately correlated","Compress log storage","Automatically delete old logs"],a:1},
+  {q:"An exception should always be accompanied by:",c:["Deletion of audit trails","Proper documentation explaining the business reason","Permanent removal of the control","No action needed"],a:1},
+  {q:"Breach and Attack Simulations test:",c:["Only social engineering defenses","Defensive controls by simulating real attacks before real attackers do","Database vulnerabilities only","Code quality"],a:1},
+];
+
+const scenarioData = [
+  {q:"A user receives an email that appears to be from their bank asking them to click a link and verify their account. What type of attack is this?",c:["Social Engineering / Phishing","Buffer Overflow","SQL Injection","Rootkit"],a:0},
+  {q:"A company's server becomes unavailable after receiving millions of requests from a single source. What type of attack is this?",c:["DDoS","DoS","XSS","Replay Attack"],a:1},
+  {q:"The same attack as above, but the requests come from thousands of different compromised machines around the world. Now what is it?",c:["DoS","Replay Attack","DDoS","SYN Attack"],a:2},
+  {q:"An employee installs free antivirus software from an unofficial website and their computer gets infected. What type of malware is this?",c:["Worm","Trojan Horse","Adware","Logic Bomb"],a:1},
+  {q:"A piece of malware spreads through an organization's network by itself, consuming bandwidth and slowing everything down without anyone opening a file. What is it?",c:["Virus","Trojan","Logic Bomb","Worm"],a:3},
+  {q:"A developer embeds code that will delete all customer records on a specific date if they are fired. What is this?",c:["Ransomware","Worm","Logic Bomb","Rootkit"],a:2},
+  {q:"An attacker gains admin-level access to a server, modifies system files, and the process becomes invisible to the OS — persisting for months. What malware is this?",c:["Spyware","Adware","Trojan","Rootkit"],a:3},
+  {q:"Files on all company computers are encrypted and a ransom note appears demanding Bitcoin payment. What attack occurred?",c:["Worm","Logic Bomb","Ransomware","Backdoor"],a:2},
+  {q:"Security logs from multiple devices show inconsistent timestamps, making it impossible to correlate events. What should be configured?",c:["SCAP","NTP (Network Time Protocol)","CVE","COBIT"],a:1},
+  {q:"A penetration tester is given zero information about the target organization before testing begins. What type of pentest is this?",c:["White Box","Gray Box","Black Box","Red Team"],a:2},
+  {q:"A pentester receives the full source code, network diagrams, and valid credentials before testing. What type of pentest is this?",c:["Black Box","Gray Box","White Box","Purple Team"],a:2},
+  {q:"An attacker captures a valid authentication message between a user and server, then replays that message hours later to gain unauthorized access. What attack is this?",c:["SQL Injection","Replay Attack","XSS Attack","Backdoor"],a:1},
+  {q:"A SIEM alert fires for a login attempt, but after investigation the analyst determines it was just the user resetting their own password. What was the alert?",c:["True Positive","False Negative","False Positive","True Negative"],a:2},
+  {q:"A SIEM alert fires and after investigation, the analyst confirms it was a real brute force attack in progress. What was the alert?",c:["False Positive","False Negative","True Negative","True Positive"],a:3},
+  {q:"After a malware infection is discovered, the security team immediately cuts off the infected machine from the rest of the network. What action is this?",c:["Eradication","Recovery","Isolation (Containment)","Post-Incident Review"],a:2},
+  {q:"A company hires an outside firm to independently evaluate its security controls and issue a formal report. What is this?",c:["Internal Audit","Penetration Test","External Audit","Third-Party Audit"],a:2},
+  {q:"A regulatory body initiates an audit of a financial firm under its jurisdiction. What type of audit is this?",c:["Internal Audit","External Audit","Third-Party Audit","Compliance Check"],a:2},
+  {q:"After running vulnerability scans, the security team organizes all findings by severity and creates a plan for fixing them with timelines. What is this plan called?",c:["Security Policy","Remediation Roadmap","Executive Summary","Threat Intelligence Report"],a:1},
+  {q:"An organization temporarily bypasses a control for a business reason and documents it. What is this called?",c:["A vulnerability","A finding","An exception","A misconfiguration"],a:2},
+  {q:"Scripts are used to simulate web traffic against a new application to measure how it responds under load. What type of test is this?",c:["Code Review","Interface Testing","Synthetic Transactions","Coverage Analysis"],a:2},
+  {q:"A tester intentionally provides invalid, malformed, and unexpected inputs to a web form to see how the system handles it. What is this?",c:["Coverage Analysis","Compliance Check","Misuse Case Testing","Breach Simulation"],a:2},
+  {q:"The security team realizes that a critical part of the system was never included in their test plan. What type of test identifies this gap?",c:["Interface Testing","Coverage Analysis","Log Review","Synthetic Transactions"],a:1},
+  {q:"A team runs simulated attacks against their own defensive systems before real attackers do, to test if defenses would work. What is this called?",c:["Vulnerability Assessment","Penetration Testing","Breach and Attack Simulation","Coverage Analysis"],a:2},
+  {q:"A security team has both attackers and defenders sharing findings in real-time to improve both offensive and defensive capabilities. What team structure is this?",c:["Red Team","Blue Team","Purple Team","SOC Team"],a:2},
+  {q:"A Malware analyst receives a SIEM alert about a phishing attempt and follows a structured process. What is step 3 of the Basic Analyst Process?",c:["Receive Alert","Check Logs","Analyze Behavior","Validate Source"],a:2},
+  {q:"A company runs network scans to find all devices and open ports on its infrastructure as part of vulnerability management. What type of scan is this?",c:["Web App Vulnerability Scan","Database Vulnerability Scan","Network Discovery Scan","Compliance Check"],a:2},
+  {q:"SQL was passed into a web form and successfully deleted an entire table in the production database. What attack occurred?",c:["XSS Attack","Remote Code Execution","SQL Injection","Buffer Overflow"],a:2},
+  {q:"A malicious JavaScript was embedded in a popular website's comment section. When users visit the page, their session cookies are stolen. What attack is this?",c:["SQL Injection","Remote Code Execution","Phishing","XSS (Cross-Site Scripting)"],a:3},
+  {q:"A web application was improperly coded and an attacker runs system-level commands on the server remotely. What attack is this?",c:["SQL Injection","XSS","Remote Code Execution","Backdoor Attack"],a:2},
+  {q:"A security leader needs to present the results of a pentest to the company board. Which section of the report should they focus on?",c:["Methodology","Findings","Executive Summary","Risk Analysis"],a:2},
+  {q:"A user opens an email attachment that looks like a PDF invoice. It installs malware that runs silently and sends screenshots of the user's screen to an attacker. What malware is this?",c:["Adware","Worm","Spyware","Ransomware"],a:2},
+  {q:"An organization wants to know the standard identifier for a recently discovered vulnerability in OpenSSL. What should they look up?",c:["CVSS Score","CVE ID","SCAP Score","COBIT Framework"],a:1},
+  {q:"A security analyst needs to understand how severe a newly discovered vulnerability is — how easily it can be exploited and what the impact would be. What system provides this?",c:["CVE","SCAP","CVSS","NIST SP 800-53A"],a:2},
+  {q:"A company's account managers notice that several employees who changed roles still have access to systems from their old positions. What problem is this?",c:["Session Hijacking","Privilege Creep","Social Engineering","Buffer Overflow"],a:1},
+  {q:"A company has no policy on disclosing security incidents to the public. They want to create one. Which organization has a template for this?",c:["NIST","COBIT","DHS","ISO"],a:2},
+  {q:"An organization uses COBIT to standardize its security audit. What is COBIT?",c:["A vulnerability scanner","A penetration testing methodology","A standard for information technology auditing","An encryption algorithm"],a:2},
+  {q:"A macro in a Microsoft Word document activates when the document is opened and starts spreading malware. What type of virus is this?",c:["Boot Sector Virus","Script Virus","Macro Virus","Polymorphic Virus"],a:2},
+  {q:"Hackers discover and exploit a flaw in widely-used software before the vendor even knows it exists. What is this?",c:["Replay Attack","Zero Day Attack","Buffer Overflow","Logic Bomb"],a:1},
+  {q:"A developer uses a static code analysis tool to find security flaws in the application before it is deployed. What type of testing is this?",c:["Coverage Analysis","Code Review","Interface Testing","Compliance Check"],a:1},
+  {q:"The security team tests all the APIs and integration points between their web application and third-party services. What type of testing is this?",c:["Misuse Case Testing","Synthetic Transactions","Coverage Analysis","Interface Testing"],a:3},
+  {q:"After a security incident, the team patches the systems, restores data from backups, and resumes normal operations. Which phase of the IR lifecycle is this?",c:["Containment","Eradication","Recovery","Post-Incident"],a:2},
+  {q:"After the recovery phase, the team documents lessons learned and improves processes for the future. Which IR phase is this?",c:["Preparation","Recovery","Eradication","Post-Incident"],a:3},
+  {q:"A company's security team wants to understand which user accounts have accumulated permissions beyond what their current role requires. What should they collect data on?",c:["SIEM logs only","Account management processes to guard against privilege creep","Network traffic","CVE scores"],a:1},
+  {q:"A tester is provided with some architecture diagrams but no source code or credentials. What type of pentest is this?",c:["Black Box","White Box","Gray Box","Red Team Only"],a:2},
+  {q:"A SOC analyst at Level 2 escalates a confirmed phishing incident to the IR team. Which team does both of these roles belong to?",c:["Red Team","Purple Team","Blue Team","Audit Team"],a:2},
+  {q:"A company uses the output of a vulnerability scan to prioritize which systems to patch first based on CVSS scores. What is CVSS?",c:["Common Vulnerability Scoring System — ranks severity of vulnerabilities","Common Vulnerabilities and Exposures — unique vulnerability IDs","Security Content Automation Protocol — standards initiative","Control Objectives for IT — auditing framework"],a:0},
+  {q:"The NIST assessments describe people who carry out actions within the information system. What are these called?",c:["Specifications","Mechanisms","Activities","Individuals"],a:2},
+  {q:"A company is audited by its own internal security team, and the audit report goes to senior management. What type of audit is this?",c:["External Audit","Third-Party Audit","Internal Audit","Compliance Audit"],a:2},
+  {q:"An attacker captures enough Wi-Fi traffic using WEP encryption to eventually crack the encryption key. What type of vulnerability is this?",c:["Buffer Overflow","Weak Encryption Key Attack","SQL Injection","Replay Attack"],a:1},
+  {q:"The forensic analyst on the Blue Team uses Maltego during an investigation. What does Maltego help with?",c:["Penetration testing","Vulnerability scanning","Digital Forensics — link analysis and data visualization","SIEM log management"],a:2},
+];
+
+const enumerationData = [
+  {q:"Enumerate the 11 types of malware covered in Module 7",ans:["buffer overflow","viruses","worms","trojan horses","logic bombs","spyware","ransomware","adware","rootkits","backdoors","zero day attacks"]},
+  {q:"Enumerate the 5 types of viruses",ans:["boot sector","program","script","macro","polymorphic"]},
+  {q:"Enumerate 4 mitigations for social engineering",ans:["user training and awareness","be suspicious and cautious","verify identity","do not rely on email"]},
+  {q:"Enumerate 8 common attack methods listed in Module 7",ans:["dos","ddos","backdoor attack","replay attack","weak encryption key","software vulnerability attack","remote code execution","sql injection"]},
+  {q:"Enumerate 3 types of DoS/DDoS attacks",ans:["buffer overflows","syn attack","ping of death"]},
+  {q:"Enumerate the 6 phases of the Incident Response Lifecycle",ans:["preparation","detection and analysis","containment","eradication","recovery","post-incident"]},
+  {q:"Enumerate 7 attacks and their SIEM detection indicators",ans:["virus trojan unusual file activity","worm rapid spread network traffic","ddos traffic spike","phishing suspicious login","backdoor unknown remote access","spyware strange outbound connections","replay attack reused authentication patterns"]},
+  {q:"Enumerate 4 reasons threat intelligence is important",ans:["proactive defense","faster detection","updated security rules","awareness of new threats"]},
+  {q:"Enumerate 5 attacks and how access control helps mitigate them",ans:["replay attack use tokens mfa","phishing limits damage","backdoor detect unauthorized access","rootkit prevent privilege escalation","insider threat restrict access"]},
+  {q:"Enumerate 5 attacks and their endpoint/network security defenses",ans:["virus trojan antivirus edr","worm network monitoring","ddos firewall traffic filtering","spyware endpoint detection","backdoor network and endpoint monitoring"]},
+  {q:"Enumerate 5 attacks and vulnerability management actions",ans:["buffer overflow secure coding patching","rce fix application flaws","sql injection input validation","worm patch vulnerabilities","zero day hardening reduced exposure"]},
+  {q:"Enumerate the 5 steps of the Basic Analyst Process",ans:["receive alert","check logs","analyze behavior","validate source","decide true or false positive"]},
+  {q:"Enumerate 7 topics covered in Module 8 Security Assessment and Testing",ans:["designing security tests","vulnerability assessments","penetration testing","other common tests","collecting security process data","analyzing test output","conducting security audits"]},
+  {q:"Enumerate 10 factors to consider when scheduling security tests",ans:["availability of testing resources","criticality of systems","sensitivity of data","likelihood of technical failure","likelihood of misconfiguration","risk of attack","rate of change of control configuration","changes in technical environment","difficulty and time required","impact on business operations"]},
+  {q:"Enumerate the 4 NIST SP 800-53A assessment components",ans:["specifications","mechanisms","activities","individuals"]},
+  {q:"Enumerate 3 types of security audits",ans:["internal audit","external audit","third-party audit"]},
+  {q:"Enumerate 3 audit location types",ans:["on-premises","cloud","hybrid"]},
+  {q:"Enumerate 4 types of vulnerability scans",ans:["network discovery scans","network vulnerability scans","web app vulnerability scans","database vulnerability scans"]},
+  {q:"Enumerate 3 types of penetration testing",ans:["black box","white box","gray box"]},
+  {q:"Enumerate 3 security teams in penetration testing",ans:["red team","blue team","purple team"]},
+  {q:"Enumerate 4 Red Team positions",ans:["ethical hacker pentester","exploit developer","bug bounty hunter","physical security pentester"]},
+  {q:"Enumerate 6 Blue Team positions",ans:["soc analyst","incident response analyst","threat hunter","digital forensic analyst","threat intelligence analyst","vulnerability management analyst"]},
+  {q:"Enumerate Red Team tools",ans:["nmap","metasploit","kali linux"]},
+  {q:"Enumerate Blue Team tools",ans:["siem","qualys","openvas","maltego","ips ids","edr","firewall rules"]},
+  {q:"Enumerate 8 other common security tests",ans:["log reviews","synthetic transactions","code review","misuse case testing","coverage analysis","breach and attack simulations","compliance checks","interface testing"]},
+  {q:"Enumerate 6 Key Performance and Risk Indicators (KPIs/KRIs)",ans:["number of open vulnerabilities","time to resolve","rate of occurrence","number of compromises","number of software flaws","audit findings"]},
+  {q:"Enumerate 7 components of a security test report",ans:["executive summary","scope and objectives","methodology","findings","risk analysis","recommendations","timelines and resources"]},
+  {q:"Enumerate 3 buffer overflow protections",ans:["data input validation","windows run-time protections","secure development practices"]},
+  {q:"Enumerate what spyware collects",ans:["keystrokes","screenshots","authentication credentials","personally identifiable information","web form data"]},
+  {q:"Enumerate 4 Blue Team SIEM tools by name",ans:["qradar","splunk","alertlogic","sentinel"]},
+  {q:"Enumerate the 2 results of the SCAP initiative",ans:["cve","cvss"]},
+  {q:"Enumerate 3 differences between DoS and DDoS",ans:["dos is single source ddos is many machines","ddos is harder to block","ddos uses botnet or multiple malicious machines"]},
+  {q:"Enumerate 3 types of email-based threats",ans:["spam","spoofed email","phishing"]},
+  {q:"Enumerate 3 web-based attack types",ans:["remote code execution","sql injection","xss cross-site scripting"]},
+  {q:"Enumerate what SQL injection can do to a database",ans:["retrieve information","delete information","drop tables"]},
+  {q:"Enumerate what XSS attacks can steal",ans:["sensitive page content","session cookies","other user information"]},
+  {q:"Enumerate 3 things that make a rootkit dangerous",ans:["gains root admin access","modifies core system files","remains invisible to the operating system"]},
+  {q:"Enumerate the 5 web-based vulnerability scan types",ans:["network discovery","network vulnerability","web app vulnerability","database vulnerability","compliance scans"]},
+  {q:"Enumerate 3 characteristics of a worm vs a virus",ans:["no host application needed","does not require user execution","travels autonomously over the network"]},
+  {q:"Enumerate what information an IR report on threat intelligence maps attacks to",ans:["phishing fake domains","ransomware detect variants","worm known spreading behavior","zero day known c2 servers"]},
+  {q:"Enumerate 3 real-world uses of rootkits",ans:["governmental spying on another government","corporate espionage","stealing customer data"]},
+  {q:"Enumerate the 5 types of vulnerability scanning packages",ans:["network discovery scans","network vulnerability scans","web app vulnerability scans","database vulnerability scans","compliance scans"]},
+  {q:"Enumerate 3 types of DoS/DDoS attack techniques",ans:["buffer overflows","syn attack","ping of death"]},
+  {q:"Enumerate what adware does",ans:["shows unwanted advertisements","collects marketing data about the user","typically hidden until pop-ups appear"]},
+  {q:"Enumerate 3 things a logic bomb's trigger event can be",ans:["when a specific date is reached","when a user launches a specific program","any condition the programmer decides on"]},
+  {q:"Enumerate 3 things phishing aims to achieve",ans:["trick users into revealing personal information","trick users into clicking malicious links","steal bank account or credential information"]},
+  {q:"Enumerate the key difference between an assessment and a testing in 3 points",ans:["testing verifies controls assessment is comprehensive","testing is scheduled assessment includes risk review","assessment includes threat environment review testing does not"]},
+  {q:"Enumerate 3 things exceptions in security always require",ans:["documentation","justified business reason","awareness that risk is increased"]},
+  {q:"Enumerate 4 things DHS has created related to security",ans:["vulnerability disclosure policy template","cybersecurity frameworks","incident reporting guidance","critical infrastructure protection"]},
+  {q:"Enumerate 2 outputs of vulnerability assessments",ans:["discovery of system weaknesses","remediation roadmap"]},
+];
+
+// ---- QUIZ ENGINE ----
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+let quizState = [], scenarioState = [], enumState = [];
+
+function buildMCQState(data) {
+  return shuffle(data).map((item, index) => {
+    const opts = item.c.map((c, i) => ({ c, correct: i === item.a }));
+    const shuffled = shuffle(opts);
+    return { id: index, q: item.q, choices: shuffled, answer: shuffled.findIndex(o => o.correct), selected: null };
+  });
+}
+
+function buildEnumState(data) {
+  return shuffle(data).map((item, index) => ({
+    id: index, q: item.q, answers: item.ans.map(a => a.toLowerCase()), selected: ''
+  }));
+}
+
+function renderMCQ(state, listId, prefix) {
+  const list = document.getElementById(listId);
+  list.innerHTML = '';
+  state.forEach((item, idx) => {
+    const card = document.createElement('div');
+    card.className = 'quiz-item';
+    card.innerHTML = `<div class="q-question">${idx + 1}. ${item.q}</div>
+      <div class="q-choices">${item.choices.map((opt, oi) => `
+        <label class="q-choice">
+          <input type="radio" name="${prefix}-${idx}" value="${oi}">
+          <span>${String.fromCharCode(65 + oi)}. ${opt.c}</span>
+        </label>`).join('')}
+      </div>
+      <div class="q-feedback"></div>`;
+    list.appendChild(card);
+  });
+}
+
+function renderEnum(state, listId) {
+  const list = document.getElementById(listId);
+  list.innerHTML = '';
+  state.forEach((item, idx) => {
+    const card = document.createElement('div');
+    card.className = 'quiz-item';
+    card.innerHTML = `<div class="q-question">${idx + 1}. ${item.q}</div>
+      <div class="q-choices">
+        <label class="q-choice" style="cursor:text; align-items:stretch; flex-direction:column;">
+          <input type="text" data-ei="${idx}" placeholder="Type answers separated by commas…">
+          <span style="font-size:0.75rem;margin-top:4px;display:block;">Separate with commas, order doesn't matter</span>
+        </label>
+      </div>
+      <div class="q-feedback"></div>`;
+    list.appendChild(card);
+  });
+}
+
+function gradeMCQ(state, listId, prefix, scoreId, statsId) {
+  const cards = [...document.querySelectorAll(`#${listId} .quiz-item`)];
+  let correct = 0;
+  cards.forEach((card, idx) => {
+    const item = state[idx];
+    const sel = card.querySelector(`input[name="${prefix}-${idx}"]:checked`);
+    const selectedIndex = sel ? Number(sel.value) : null;
+    const choices = [...card.querySelectorAll('.q-choice')];
+    const fb = card.querySelector('.q-feedback');
+    choices.forEach(c => c.classList.remove('correct', 'wrong'));
+    card.classList.remove('correct', 'wrong');
+    if (choices[item.answer]) choices[item.answer].classList.add('correct');
+    if (selectedIndex === item.answer) {
+      correct++;
+      card.classList.add('correct');
+      fb.innerHTML = `<strong>Correct.</strong> ${item.choices[item.answer].c}`;
+    } else {
+      card.classList.add('wrong');
+      if (selectedIndex !== null && choices[selectedIndex]) choices[selectedIndex].classList.add('wrong');
+      fb.innerHTML = `<strong>Correct answer:</strong> ${String.fromCharCode(65 + item.answer)}. ${item.choices[item.answer].c}`;
+    }
+  });
+  const pct = Math.round((correct / state.length) * 100);
+  const scoreEl = document.getElementById(scoreId);
+  scoreEl.classList.add('show');
+  scoreEl.innerHTML = `Score: ${correct}/${state.length} (${pct}%)<div class="q-score-note">Answers revealed. Shuffle to reset.</div>`;
+  document.getElementById(statsId).textContent = `Last score: ${correct}/${state.length} (${pct}%)`;
+}
+
+function gradeEnum(state, listId, scoreId, statsId) {
+  const cards = [...document.querySelectorAll(`#${listId} .quiz-item`)];
+  let total = 0, possible = 0;
+  cards.forEach((card, idx) => {
+    const item = state[idx];
+    const input = card.querySelector(`[data-ei="${idx}"]`);
+    const fb = card.querySelector('.q-feedback');
+    const value = (input?.value || '').toLowerCase().trim();
+    const given = [...new Set(value.split(',').map(v => v.trim()).filter(Boolean))];
+    const correctSet = new Set(item.answers);
+    const matched = given.filter(a => correctSet.has(a));
+    total += matched.length;
+    possible += item.answers.length;
+    if (input) input.disabled = true;
+    card.classList.remove('correct', 'wrong');
+    if (matched.length === item.answers.length && given.length === item.answers.length) {
+      card.classList.add('correct');
+      fb.innerHTML = `<strong>Correct!</strong>`;
+    } else {
+      card.classList.add('wrong');
+      fb.innerHTML = `<strong>Score: ${matched.length}/${item.answers.length}</strong><br><strong>Correct answers:</strong> ${item.answers.join(', ')}`;
+    }
+  });
+  const pct = Math.round((total / possible) * 100);
+  const scoreEl = document.getElementById(scoreId);
+  scoreEl.classList.add('show');
+  scoreEl.innerHTML = `Score: ${total}/${possible} (${pct}%) — Partial credit counted<div class="q-score-note">Shuffle to reset.</div>`;
+  document.getElementById(statsId).textContent = `Last score: ${total}/${possible} (${pct}%)`;
+}
+
+function initQuiz() {
+  quizState = buildMCQState(quizData);
+  renderMCQ(quizState, 'quizList', 'q');
+  document.getElementById('quizScore').classList.remove('show');
+  document.getElementById('quizStats').textContent = `${quizState.length} multiple-choice items.`;
+}
+
+function initScenario() {
+  scenarioState = buildMCQState(scenarioData);
+  renderMCQ(scenarioState, 'scenarioList', 's');
+  document.getElementById('scenarioScore').classList.remove('show');
+  document.getElementById('scenarioStats').textContent = `${scenarioState.length} scenario items.`;
+}
+
+function initEnum() {
+  enumState = buildEnumState(enumerationData);
+  renderEnum(enumState, 'enumList');
+  document.getElementById('enumScore').classList.remove('show');
+  document.getElementById('enumStats').textContent = `${enumState.length} enumeration items.`;
+}
+
+document.getElementById('checkQuizBtn').addEventListener('click', () => gradeMCQ(quizState, 'quizList', 'q', 'quizScore', 'quizStats'));
+document.getElementById('shuffleQuizBtn').addEventListener('click', initQuiz);
+document.getElementById('checkScenarioBtn').addEventListener('click', () => gradeMCQ(scenarioState, 'scenarioList', 's', 'scenarioScore', 'scenarioStats'));
+document.getElementById('shuffleScenarioBtn').addEventListener('click', initScenario);
+document.getElementById('checkEnumBtn').addEventListener('click', () => gradeEnum(enumState, 'enumList', 'enumScore', 'enumStats'));
+document.getElementById('shuffleEnumBtn').addEventListener('click', initEnum);
+
+initQuiz();
+initScenario();
+initEnum();
+</script>
+</body>
+</html>
