@@ -154,7 +154,8 @@ body.light-mode .compare tr:nth-child(even) td{background:rgba(0,0,0,.025)}
 
 #mcqQuiz .card-title.sticky-title,
 #scenarioQuiz .card-title.sticky-title,
-#enumQuiz .card-title.sticky-title {
+#enumQuiz .card-title.sticky-title,
+#idQuiz .card-title.sticky-title {
   top: 0;
   z-index: 12;
   padding-top: 4.4rem;
@@ -163,7 +164,8 @@ body.light-mode .compare tr:nth-child(even) td{background:rgba(0,0,0,.025)}
 
 #mcqQuiz .quiz-meta,
 #scenarioQuiz .quiz-meta,
-#enumQuiz .quiz-meta {
+#enumQuiz .quiz-meta,
+#idQuiz .quiz-meta {
   top: 85px;
   z-index: 11;
 }
@@ -228,7 +230,8 @@ body.light-mode .compare tr:nth-child(even) td{background:rgba(0,0,0,.025)}
 
   #scenarioQuiz .quiz-meta,
   #mcqQuiz .quiz-meta,
-  #enumQuiz .quiz-meta{top:42px}
+  #enumQuiz .quiz-meta,
+  #idQuiz .quiz-meta{top:42px}
 }
 
 @media(max-width:480px){
@@ -246,7 +249,8 @@ body.light-mode .compare tr:nth-child(even) td{background:rgba(0,0,0,.025)}
 
   #scenarioQuiz .quiz-meta,
   #mcqQuiz .quiz-meta,
-  #enumQuiz .quiz-meta{top:86px}
+  #enumQuiz .quiz-meta,
+  #idQuiz .quiz-meta{top:86px}
 }
 </style>
 </head>
@@ -1050,6 +1054,22 @@ body.light-mode .compare tr:nth-child(even) td{background:rgba(0,0,0,.025)}
   </div>
 </div>
 
+<!-- ===== IDENTIFICATION QUIZ ===== -->
+<div id="idQuiz" class="section">
+  <div class="card">
+    <div class="card-title sticky-title"><span class="ct-icon"></span>Identification — Threats, Attacks, and Vulnerabilities (90 Items)</div>
+    <div class="quiz-meta">
+      <div class="q-stats" id="idStats">90 identification items. Type the best term for each description.</div>
+      <div class="q-actions">
+        <button class="q-btn primary" id="checkId">Check Answers</button>
+        <button class="q-btn" id="shuffleId">Shuffle</button>
+      </div>
+    </div>
+    <div class="q-score" id="idScore"></div>
+    <div class="quiz-list" id="idList"></div>
+  </div>
+</div>
+
 </main>
 
 <script>
@@ -1065,7 +1085,8 @@ const navSections=[
   {id:'acros',label:'Acronyms'},
   {id:'mcqQuiz',label:'MCQ (100)'},
   {id:'scenarioQuiz',label:'Scenario (100)'},
-  {id:'enumQuiz',label:'Enumeration (100)'}
+  {id:'enumQuiz',label:'Enumeration (100)'},
+  {id:'idQuiz',label:'Identification (90)'}
 ];
 let activeSection='m1';
 
@@ -1421,6 +1442,107 @@ const enumData=[
   {q:"Enumerate what SQL injection can do",ans:["retrieve information","delete information","drop database tables"]},
 ];
 
+// ===== IDENTIFICATION DATA (90 items) =====
+const idData=[
+  {q:"Writes beyond buffer into adjacent memory; allows malicious code injection.",ans:["buffer overflow","buffer overrun"]},
+  {q:"Injects malicious SQL statements through input fields to query or destroy a database.",ans:["sql injection","sqli"]},
+  {q:"Injects malicious script into a trusted webpage to steal cookies/session data.",ans:["cross site scripting","xss"]},
+  {q:"Tricks an authenticated user into submitting unwanted requests to a web app.",ans:["cross site request forgery","csrf"]},
+  {q:"Tries many password combinations against one account until one works.",ans:["brute force attack","brute force"]},
+  {q:"Steals or predicts a session token to impersonate a logged-in user.",ans:["session hijacking"]},
+  {q:"Intercepts and potentially alters traffic between two communicating parties.",ans:["man in the middle attack","mitm"]},
+  {q:"Captures valid authentication data and resends it later to gain access.",ans:["replay attack"]},
+  {q:"Captures unencrypted packets traversing a network to collect sensitive data.",ans:["packet sniffing","sniffing"]},
+  {q:"Poisons DNS records so users are redirected to malicious destinations.",ans:["dns spoofing","dns cache poisoning"]},
+  {q:"Sends forged ARP messages to map victim IP addresses to attacker MAC.",ans:["arp spoofing","arp poisoning"]},
+  {q:"Sets up a fake Wi-Fi AP that mimics a legitimate network.",ans:["evil twin attack","evil twin"]},
+  {q:"Sends forged Wi-Fi deauth frames to disconnect clients from access points.",ans:["deauthentication attack","wifi deauth attack"]},
+  {q:"Floods target with SYN packets, leaving many half-open TCP connections.",ans:["syn flood","syn attack"]},
+  {q:"Overwhelms a service using traffic from many compromised systems.",ans:["distributed denial of service","ddos"]},
+  {q:"Overwhelms a service from one source to make it unavailable.",ans:["denial of service","dos attack","dos"]},
+  {q:"Sends malformed/oversized ICMP packets to crash or destabilize systems.",ans:["ping of death"]},
+  {q:"Floods a target with excessive ICMP echo requests.",ans:["icmp flood"]},
+  {q:"Uses spoofed source addresses to amplify ICMP traffic toward a victim.",ans:["smurf attack"]},
+  {q:"Sends fragmented packets with overlapping offsets to crash older systems.",ans:["teardrop attack"]},
+  {q:"Exploits a known vulnerability before the organization applies available patch.",ans:["n day attack","n-day attack"]},
+  {q:"Exploits a previously unknown vulnerability before vendor fix exists.",ans:["zero day attack","zero-day attack"]},
+  {q:"Creates hidden remote access path that bypasses normal authentication.",ans:["backdoor"]},
+  {q:"Stealth malware that hides attacker processes/files with privileged control.",ans:["rootkit"]},
+  {q:"Malicious code that triggers when a specific condition or date occurs.",ans:["logic bomb"]},
+  {q:"Malware disguised as legitimate software to trick users into execution.",ans:["trojan horse","trojan"]},
+  {q:"Self-replicating malware that spreads across networks without user action.",ans:["worm"]},
+  {q:"Malicious code that infects files/programs and needs host execution.",ans:["virus"]},
+  {q:"Encrypts victim files/systems and demands payment for decryption.",ans:["ransomware"]},
+  {q:"Records keystrokes to steal passwords and sensitive user input.",ans:["keylogger"]},
+  {q:"Displays unwanted or malicious advertisements to the user.",ans:["adware"]},
+  {q:"Fake security alerts that scare users into paying or installing malware.",ans:["scareware"]},
+  {q:"Deceptive email message designed to steal credentials or install malware.",ans:["phishing"]},
+  {q:"Highly targeted phishing attack tailored to a specific person/group.",ans:["spear phishing"]},
+  {q:"Targets executives with fraudulent urgent requests (e.g., wire transfer).",ans:["whaling","business email compromise","bec"]},
+  {q:"Voice-call based social engineering to steal credentials or OTPs.",ans:["vishing"]},
+  {q:"SMS/text-message based phishing attack.",ans:["smishing"]},
+  {q:"Unauthorized person follows authorized user into restricted area.",ans:["tailgating","piggybacking"]},
+  {q:"Gathers sensitive information by watching someone type/view data.",ans:["shoulder surfing"]},
+  {q:"Collects sensitive information from discarded physical documents/media.",ans:["dumpster diving"]},
+  {q:"Uses fabricated scenario/identity to manipulate victims into disclosure.",ans:["pretexting"]},
+  {q:"Lures victim with enticing item (e.g., infected USB) to trigger compromise.",ans:["baiting"]},
+  {q:"Offers fake benefit/service in exchange for sensitive information.",ans:["quid pro quo attack","quid pro quo"]},
+  {q:"Compromises websites frequently visited by target victims.",ans:["watering hole attack","watering hole"]},
+  {q:"Malware installs simply by visiting a compromised website.",ans:["drive by download","drive-by download"]},
+  {q:"Malware distributed through malicious online advertisements.",ans:["malvertising"]},
+  {q:"Fake sign-in page collects user credentials.",ans:["credential harvesting"]},
+  {q:"Injects OS commands through user-controlled input into backend shell.",ans:["command injection","os command injection"]},
+  {q:"Unsafe object deserialization lets attacker run arbitrary code.",ans:["insecure deserialization"]},
+  {q:"Forces server to make unintended requests to internal/external systems.",ans:["server side request forgery","ssrf"]},
+  {q:"Abuses XML parser to read local files or perform SSRF.",ans:["xml external entity","xxe"]},
+  {q:"Uses ../ patterns to access files outside intended directory.",ans:["path traversal","directory traversal"]},
+  {q:"Allows upload of malicious executable/script due to weak validation.",ans:["unrestricted file upload","file upload vulnerability"]},
+  {q:"Switches resource state between check and use to bypass validation.",ans:["race condition","time of check time of use","toctou"]},
+  {q:"Arithmetic exceeds max integer size causing wraparound behavior.",ans:["integer overflow"]},
+  {q:"Continues using memory after it has been freed.",ans:["use after free","use-after-free"]},
+  {q:"Attacker controls formatting tokens in print function for memory abuse.",ans:["format string vulnerability","format string attack"]},
+  {q:"Injects or manipulates executable instructions in vulnerable memory region.",ans:["code injection"]},
+  {q:"Infers secrets from response time differences in cryptographic operations.",ans:["timing attack"]},
+  {q:"Forces use of weaker protocol/cipher despite stronger options.",ans:["downgrade attack"]},
+  {q:"Finds two different inputs producing same hash output.",ans:["hash collision attack","collision attack"]},
+  {q:"Uses precomputed hash tables to reverse weak password hashes.",ans:["rainbow table attack","rainbow table"]},
+  {q:"Attempts common-word passwords against hashes or login prompts.",ans:["dictionary attack"]},
+  {q:"Exploits oracle responses on bad padding to decrypt ciphertext.",ans:["padding oracle attack"]},
+  {q:"Attacker can choose plaintexts to analyze cipher behavior.",ans:["chosen plaintext attack","cpa"]},
+  {q:"Attacker can choose ciphertexts and observe corresponding decryptions.",ans:["chosen ciphertext attack","cca"]},
+  {q:"Reinstalls WPA2 keys by abusing handshake retransmissions.",ans:["krack attack","key reinstallation attack"]},
+  {q:"Rogue DHCP server assigns malicious gateway/DNS settings.",ans:["dhcp spoofing","rogue dhcp attack"]},
+  {q:"Tries one common password across many accounts to evade lockouts.",ans:["password spraying"]},
+  {q:"Uses stolen username-password pairs from breaches to log in elsewhere.",ans:["credential stuffing"]},
+  {q:"Use of unapproved apps/services by employees outside security controls.",ans:["shadow it"]},
+  {q:"Authorized employee/contractor misuses legitimate access for harm.",ans:["insider threat"]},
+  {q:"Long-term stealthy targeted campaign by well-resourced adversary.",ans:["advanced persistent threat","apt"]},
+  {q:"Malware infects the boot process or boot sector for persistence.",ans:["bootkit"]},
+  {q:"Malicious code implanted in firmware to survive OS reinstall.",ans:["firmware rootkit"]},
+  {q:"Sensitive cloud data exposed due to publicly readable storage config.",ans:["cloud misconfiguration","misconfigured cloud storage"]},
+  {q:"Internet-exposed admin panel with default credentials exploited by attacker.",ans:["default credential attack","default credentials"]},
+  {q:"Abuse of APIs via excessive or unauthorized calls due to weak controls.",ans:["api abuse"]},
+  {q:"Repeated MFA push prompts until user accidentally approves.",ans:["mfa fatigue attack","push bombing"]},
+  {q:"Compromised dependency/update process inserts malicious code in trusted software.",ans:["supply chain attack","software supply chain attack"]},
+  {q:"Malicious package uses lookalike name of popular library.",ans:["typosquatting"]},
+  {q:"Compromise of software update channel delivers trojanized updates.",ans:["software update compromise","malicious update attack"]},
+  {q:"Fake captive portal on public Wi-Fi steals login credentials.",ans:["captive portal phishing","evil portal attack"]},
+  {q:"Extracts sensitive info by automating large-scale data collection from app outputs.",ans:["data scraping"]},
+  {q:"Exfiltrates data encoded inside DNS queries/responses.",ans:["dns tunneling"]},
+  {q:"Exfiltrates or controls traffic through covert ICMP packets.",ans:["icmp tunneling"]},
+  {q:"Attacker plugs unauthorized hardware into network to gain foothold.",ans:["rogue device attack","rogue device"]},
+  {q:"Malware steals browser-saved credentials, cookies, and session tokens.",ans:["infostealer","information stealer malware"]},
+  {q:"Attack overwhelms auth system by repeatedly requesting OTP codes.",ans:["otp bombing","authentication flooding"]},
+  {q:"Attacker redirects users by modifying hosts file or local resolver settings.",ans:["hosts file poisoning"]},
+  {q:"Publicly exposed secrets in code/repo (API keys, tokens) exploited by attacker.",ans:["secret leakage","credential exposure"]},
+  {q:"Abuse of excessive permissions from over-privileged account/app.",ans:["privilege abuse","excessive privilege abuse"]},
+  {q:"Escalates from low privileges to admin/root through vulnerability misuse.",ans:["privilege escalation"]},
+  {q:"Hidden communication channel bypasses normal security monitoring.",ans:["covert channel"]},
+  {q:"Malicious insider copies confidential records before resignation.",ans:["data exfiltration"]},
+  {q:"Attacker persists silently and moves laterally between internal systems.",ans:["lateral movement"]},
+  {q:"Compromised endpoint becomes part of remotely controlled attack network.",ans:["botnet infection","bot infection"]}
+];
+
 // ===== ENGINE =====
 function buildMCQState(data){
   return shuffle(data).map((item,i)=>{
@@ -1431,6 +1553,9 @@ function buildMCQState(data){
 }
 function buildEnumState(data){
   return shuffle(data).map((item,i)=>({id:i,q:item.q,answers:item.ans.map(a=>a.toLowerCase()),selected:''}));
+}
+function buildIdState(data){
+  return shuffle(data).map((item,i)=>({id:i,q:item.q,answers:item.ans.map(a=>normalizeAnswer(a))}));
 }
 function renderMCQ(state,listId,prefix){
   const list=document.getElementById(listId);
@@ -1459,6 +1584,26 @@ function renderEnum(state,listId){
       </label></div><div class="q-feedback"></div>`;
     list.appendChild(card);
   });
+}
+function renderId(state,listId){
+  const list=document.getElementById(listId);
+  list.innerHTML='';
+  state.forEach((item,idx)=>{
+    const card=document.createElement('div');
+    card.className='quiz-item';
+    card.innerHTML=`<div class="q-question">${idx+1}. ${item.q}</div>
+      <div class="q-choices"><label class="q-choice" style="cursor:text;align-items:stretch;flex-direction:column;">
+        <input type="text" data-ii="${idx}" placeholder="Type your answer…">
+        <span style="font-size:.74rem;margin-top:4px;display:block;color:var(--muted)">Use the exact security term (close variants accepted)</span>
+      </label></div><div class="q-feedback"></div>`;
+    list.appendChild(card);
+  });
+}
+function normalizeAnswer(value){
+  return (value||'')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g,' ')
+    .trim();
 }
 function gradeMCQ(state,listId,prefix,scoreId,statsId){
   const cards=[...document.querySelectorAll(`#${listId} .quiz-item`)];
@@ -1504,12 +1649,39 @@ function gradeEnum(state,listId,scoreId,statsId){
   scoreEl.innerHTML=`Score: ${total}/${possible} (${pct}%) — Partial credit<div class="q-score-note">Shuffle to reset.</div>`;
   document.getElementById(statsId).textContent=`Last score: ${total}/${possible} (${pct}%)`;
 }
+function gradeId(state,listId,scoreId,statsId){
+  const cards=[...document.querySelectorAll(`#${listId} .quiz-item`)];
+  let correct=0;
+  cards.forEach((card,idx)=>{
+    const item=state[idx];
+    const input=card.querySelector(`[data-ii="${idx}"]`);
+    const fb=card.querySelector('.q-feedback');
+    const value=normalizeAnswer(input?.value||'');
+    const matched=item.answers.includes(value);
+    if(input) input.disabled=true;
+    card.classList.remove('correct','wrong');
+    if(matched){
+      correct++;
+      card.classList.add('correct');
+      fb.innerHTML=`<strong>Correct!</strong>`;
+    }else{
+      card.classList.add('wrong');
+      fb.innerHTML=`<strong>Expected answer:</strong> ${item.answers[0]}`;
+    }
+  });
+  const pct=Math.round((correct/state.length)*100);
+  const scoreEl=document.getElementById(scoreId);
+  scoreEl.classList.add('show');
+  scoreEl.innerHTML=`Score: ${correct}/${state.length} (${pct}%)<div class="q-score-note">Shuffle to reset.</div>`;
+  document.getElementById(statsId).textContent=`Last score: ${correct}/${state.length} (${pct}%)`;
+}
 
-let mcqState=[],scState=[],enState=[];
+let mcqState=[],scState=[],enState=[],idState=[];
 
 function initMCQ(){mcqState=buildMCQState(mcqData);renderMCQ(mcqState,'mcqList','m');document.getElementById('mcqScore').classList.remove('show');document.getElementById('mcqStats').textContent=`${mcqState.length} multiple-choice items.`;}
 function initScen(){scState=buildMCQState(scenData);renderMCQ(scState,'scenList','s');document.getElementById('scenScore').classList.remove('show');document.getElementById('scenStats').textContent=`${scenData.length} scenario-based items.`;}
 function initEnum(){enState=buildEnumState(enumData);renderEnum(enState,'enumList');document.getElementById('enumScore').classList.remove('show');document.getElementById('enumStats').textContent=`${enState.length} enumeration items.`;}
+function initId(){idState=buildIdState(idData);renderId(idState,'idList');document.getElementById('idScore').classList.remove('show');document.getElementById('idStats').textContent=`${idState.length} identification items.`;}
 
 document.getElementById('checkMCQ').addEventListener('click',()=>gradeMCQ(mcqState,'mcqList','m','mcqScore','mcqStats'));
 document.getElementById('shuffleMCQ').addEventListener('click',initMCQ);
@@ -1517,8 +1689,10 @@ document.getElementById('checkScen').addEventListener('click',()=>gradeMCQ(scSta
 document.getElementById('shuffleScen').addEventListener('click',initScen);
 document.getElementById('checkEnum').addEventListener('click',()=>gradeEnum(enState,'enumList','enumScore','enumStats'));
 document.getElementById('shuffleEnum').addEventListener('click',initEnum);
+document.getElementById('checkId').addEventListener('click',()=>gradeId(idState,'idList','idScore','idStats'));
+document.getElementById('shuffleId').addEventListener('click',initId);
 
-initMCQ();initScen();initEnum();
+initMCQ();initScen();initEnum();initId();
 </script>
 </body>
 </html>
